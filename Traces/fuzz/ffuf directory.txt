@@ -1,0 +1,57 @@
+ffuf -u "https://hackazon.trackflaw.com/FUZZ" -w /usr/share/seclists/Discovery/Web-Content/common.txt
+
+/'___\  /'___\           /'___\
+/\ \__/ /\ \__/  __  __  /\ \__/
+\ \ ,__\\ \ ,__\/\ \/\ \ \ \ ,__\
+\ \ \_/ \ \ \_/\ \ \_\ \ \ \ \_/
+\ \_\   \ \_\  \ \____/  \ \_\
+\/_/    \/_/   \/___/    \/_/
+
+v2.1.0-dev
+________________________________________________
+
+:: Method           : GET
+:: URL              : https://hackazon.trackflaw.com/FUZZ
+:: Wordlist         : FUZZ: /usr/share/seclists/Discovery/Web-Content/common.txt
+:: Follow redirects : false
+:: Calibration      : false
+:: Timeout          : 10
+:: Threads          : 100
+:: Matcher          : Response status: 200-299,301,302,307,401,403,405,500
+________________________________________________
+
+.htaccess               [Status: 403, Size: 306, Words: 22, Lines: 12, Duration: 227ms]
+.htpasswd               [Status: 403, Size: 306, Words: 22, Lines: 12, Duration: 1176ms]
+.hta                    [Status: 403, Size: 301, Words: 22, Lines: 12, Duration: 1912ms]
+Contact                 [Status: 200, Size: 27731, Words: 10678, Lines: 410, Duration: 2419ms]
+Home                    [Status: 200, Size: 64219, Words: 25251, Lines: 1110, Duration: 9398ms]
+Search                  [Status: 200, Size: 39695, Words: 17510, Lines: 617, Duration: 6463ms]
+account                 [Status: 302, Size: 0, Words: 1, Lines: 1, Duration: 2774ms]
+admin                   [Status: 302, Size: 0, Words: 1, Lines: 1, Duration: 2572ms]
+app                     [Status: 301, Size: 334, Words: 20, Lines: 10, Duration: 22ms]
+api                     [Status: 401, Size: 0, Words: 1, Lines: 1, Duration: 3114ms]
+cart                    [Status: 302, Size: 0, Words: 1, Lines: 1, Duration: 5794ms]
+crossdomain             [Status: 200, Size: 595, Words: 53, Lines: 16, Duration: 1281ms]
+crossdomain.xml         [Status: 200, Size: 595, Words: 53, Lines: 16, Duration: 1117ms]
+css                     [Status: 301, Size: 334, Words: 20, Lines: 10, Duration: 1160ms]
+contact                 [Status: 200, Size: 27731, Words: 10678, Lines: 410, Duration: 7549ms]
+facebook                [Status: 302, Size: 0, Words: 1, Lines: 1, Duration: 4553ms]
+faq                     [Status: 200, Size: 30354, Words: 13164, Lines: 471, Duration: 7254ms]
+fonts                   [Status: 301, Size: 338, Words: 20, Lines: 10, Duration: 2069ms]
+helpdesk                [Status: 301, Size: 335, Words: 20, Lines: 10, Duration: 2447ms]
+images                  [Status: 301, Size: 340, Words: 20, Lines: 10, Duration: 2932ms]
+index.php               [Status: 200, Size: 64002, Words: 25232, Lines: 1110, Duration: 7721ms]
+install                 [Status: 302, Size: 0, Words: 1, Lines: 1, Duration: 7866ms]
+home                    [Status: 200, Size: 64692, Words: 25346, Lines: 1110, Duration: 9567ms]
+js                      [Status: 301, Size: 332, Words: 20, Lines: 10, Duration: 3504ms]
+log                     [Status: 200, Size: 0, Words: 1, Lines: 1, Duration: 4446ms]
+out                     [Status: 301, Size: 334, Words: 20, Lines: 10, Duration: 3534ms]
+robots                  [Status: 200, Size: 2, Words: 2, Lines: 2, Duration: 3514ms]
+robots.txt              [Status: 200, Size: 2, Words: 2, Lines: 2, Duration: 3277ms]
+search                  [Status: 200, Size: 39695, Words: 17510, Lines: 617, Duration: 6585ms]
+server-status           [Status: 403, Size: 310, Words: 22, Lines: 12, Duration: 3128ms]
+swf                     [Status: 301, Size: 334, Words: 20, Lines: 10, Duration: 4009ms]
+twitter                 [Status: 302, Size: 0, Words: 1, Lines: 1, Duration: 4579ms]
+upload                  [Status: 301, Size: 340, Words: 20, Lines: 10, Duration: 2108ms]
+wishlist                [Status: 200, Size: 29029, Words: 11070, Lines: 453, Duration: 7757ms]
+:: Progress: [4727/4727] :: Job [1/1] :: 14 req/sec :: Duration: [0:05:29] :: Errors: 16 ::

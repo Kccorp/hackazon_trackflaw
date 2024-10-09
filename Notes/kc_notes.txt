@@ -1,0 +1,42 @@
+/// RECON ///
+
+https://hackazon.trackflaw.com/
+
+account
+    pentest1:Test1234
+
+directory in traces
+
+web root => /var/www/html/web/user_pictures/2f
+
+
+
+
+/// VULN ///
+
+fuite d'information https://hackazon.trackflaw.com/swagger.json
+
+Reflected xss =>
+
+Stored xss =>
+
+Low security settings cookie
+
+File upload =>
+
+CSRF => MILAN
+
+OPEN REDIRECT => GET /user/login?return_url=https://google.com
+
+iDOR:
+    https://hackazon.trackflaw.com/account/orders/10000021
+
+command injection => MILAN
+
+/// TO DIG ///
+
+crossdomain => XML
+
+API => check swagger
+
+Get list file and semgrep =>
