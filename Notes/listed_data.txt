@@ -1,0 +1,27 @@
+ls -la /var/www/html/web
+
+drwxr-xr-x  1 www-data www-data  4096 Oct  9 15:13 .
+drwxrwxrwx  1 www-data www-data  4096 Jun 11 15:12 ..
+-rw-r--r--  1 www-data www-data   311 Oct  9 14:29 .groscaca.php
+-rw-r--r--  1 www-data www-data   561 Jun 11 15:11 .htaccess
+drwxr-xr-x  1 www-data www-data  4096 Jun 11 15:11 amf_back_office
+drwxr-xr-x  1 www-data www-data  4096 Jun 11 15:11 app
+-rw-r--r--  1 www-data www-data   595 Jun 11 15:11 crossdomain.xml
+drwxr-xr-x  1 www-data www-data  4096 Jun 11 15:11 css
+-rw-r--r--  1 www-data www-data 20149 Oct  9 15:13 db.sql
+drwxr-xr-x  1 www-data www-data  4096 Jun 11 15:11 font-awesome
+drwxr-xr-x  1 www-data www-data  4096 Jun 11 15:11 fonts
+drwxr-xr-x  1 www-data www-data  4096 Jun 11 15:11 helpdesk
+drwxr-xr-x  1 www-data www-data  4096 Jun 11 15:11 images
+-rw-r--r--  1 www-data www-data   306 Jun 27  2023 index.php
+drwxr-xr-x  1 www-data www-data  4096 Jun 11 15:11 js
+-rw-r--r--  1 www-data www-data     0 Jun 11 15:11 log.txt
+drwxr-xr-x  1 www-data www-data  4096 Jun 11 15:11 out
+drwxr-xr-x  1 www-data www-data 61440 Jun 11 15:11 products_pictures
+-rw-r--r--  1 www-data www-data     2 Jun 11 15:11 robots.txt
+-rw-r--r--  1 www-data www-data 38012 Jun 11 15:11 swagger.json
+drwxr-xr-x  1 www-data www-data  4096 Jun 11 15:11 swf
+drwxr-xr-x  1 www-data www-data  4096 Jun 11 15:11 upload
+drwxr-xr-x 16 www-data www-data  4096 Oct  9 15:11 user_pictures
+
+
