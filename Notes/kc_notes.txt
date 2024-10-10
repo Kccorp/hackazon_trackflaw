@@ -33,6 +33,10 @@ iDOR:
 
 command injection => MILAN
 
+SQL  injection =>
+
+
+
 /// TO DIG ///
 
 crossdomain => XML
@@ -40,3 +44,9 @@ crossdomain => XML
 API => check swagger
 
 Get list file and semgrep =>
+
+
+
+tar -czvf eport.tar.gz /var/www/html/*
+
+
