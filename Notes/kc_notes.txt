@@ -11,42 +11,66 @@ web root => /var/www/html/web/user_pictures/2f
 
 
 
+tar -czvf eport.tar.gz /var/www/html/*
+
+api token 19b000d32bdd4907fd12a66da80adaf176dcdf7e
 
 /// VULN ///
 
+SSL report
+    - supported low cipher suites
+    - No HSTS
+
+Out dated software:
+    - PHP/5.6.40
+    - Flash 11.1.0
+
+Secret en clair dans le code source:
+    -/var/www/html/assets/config/auth.php
+    -/var/www/html/assets/config/db.php => default creds
+    -
+
 fuite d'information https://hackazon.trackflaw.com/swagger.json
 
-Reflected xss =>
+Reflected xss => ?search=toto
 
-Stored xss =>
+Stored xss => FAQ
 
 Low security settings cookie
 
 File upload =>
 
-CSRF => MILAN
+CSRF =>
 
 OPEN REDIRECT => GET /user/login?return_url=https://google.com
 
 iDOR:
     https://hackazon.trackflaw.com/account/orders/10000021
+    request api token
 
 command injection => MILAN
 
-SQL  injection =>
+SQL  injection => /category/view?id=exploit
+
+Autorisation d'Accès Cross-Domain Non Sécurisée dans crossdomain.xml
+
+information disclosure => /whishlist search on everyuser it return too much informations about the user
+
+low crypto password (MD5 + salt)
+
+low password policy (no minimum)
+
+énumération de compte via email (forgot password)
+
 
 
 
 /// TO DIG ///
 
-crossdomain => XML
-
 API => check swagger
 
+analyse apk in web/app/hackazon.apk
+
 Get list file and semgrep =>
-
-
-
-tar -czvf eport.tar.gz /var/www/html/*
 
 
