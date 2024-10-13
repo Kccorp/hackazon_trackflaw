@@ -1,0 +1,20 @@
+POST /helpdesk/HelpdeskService HTTP/2
+Host: hackazon.trackflaw.com
+Cookie: visited_products=%2C64%2C72%2C1%2C81%2C; PHPSESSID=XXXXXXXXXXXXXXXXXXXXXX
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:131.0) Gecko/20100101 Firefox/131.0
+Accept: */*
+Accept-Language: fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3
+Accept-Encoding: gzip, deflate, br
+Content-Type: text/x-gwt-rpc; charset=utf-8
+X-Gwt-Permutation: D9E6FA1B6C016BB53C508E629B022D27
+X-Gwt-Module-Base: https://hackazon.trackflaw.com/helpdesk/
+Content-Length: 170
+Origin: https://hackazon.trackflaw.com
+Referer: https://hackazon.trackflaw.com/helpdesk/
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+X-Pwnfox-Color: red
+Te: trailers
+
+7|0|5|https://hackazon.trackflaw.com/helpdesk/|5861BBAC393F609060A1E4008EC18E2B|com.ntobjectives.hackazon.helpdesk.client.HelpdeskService|getEnquiryById|I|1|2|3|4|1|5|21|
