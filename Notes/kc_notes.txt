@@ -24,11 +24,13 @@ SSL report
 Out dated software:
     - PHP/5.6.40
     - Flash 11.1.0
+    - JQuery 1.10.2
+    - MySQL 5.6.51
 
 Secret en clair dans le code source:
-    -/var/www/html/assets/config/auth.php
-    -/var/www/html/assets/config/db.php => default creds
-    -
+    -/var/www/html/assets/config/auth.php => token api
+    -/var/www/html/assets/config/db.php => creds db
+    -/var/www/html/assets/config/parameters.php => cred user 
 
 fuite d'information https://hackazon.trackflaw.com/swagger.json
 
@@ -46,7 +48,10 @@ OPEN REDIRECT => GET /user/login?return_url=https://google.com
 
 iDOR:
     https://hackazon.trackflaw.com/account/orders/10000021
-    request api token
+    https://hackazon.trackflaw.com/whishlst/view/4
+    https://hackazon.trackflaw.com/helpdesk/#enquiry/21
+    
+manque de contrôle d'accès => request api token
 
 command injection => MILAN
 
@@ -54,16 +59,38 @@ SQL  injection => /category/view?id=exploit
 
 Autorisation d'Accès Cross-Domain Non Sécurisée dans crossdomain.xml
 
-information disclosure => /whishlist search on everyuser it return too much informations about the user
+exposition excessive de données => /whishlist search on everyuser it return too much informations about the user
 
 low crypto password (MD5 + salt)
 
 low password policy (no minimum)
 
-énumération de compte via email (forgot password)
+énumération d'utilisateur :
+	-via email (forgot password)
+	-username OU email => register
+
+exposition du panel d'administration en public 
+
+LFI => https://hackazon.trackflaw.com/account/help_articles?page=/etc/passwd%0Aid
+
+absence d'expiration de session
+
+Pas de fonctionnalité de changement de mot de passe
 
 
+Distribution de fichiers non sécurisée
+	- /app/hackazon.apk
 
+
+Acceptation methode http excessive 
+
+antivirus non présent sur le serveur => eicar not detected 
+
+
+injection de balise => https://hackazon.trackflaw.com/helpdesk/HelpdeskService
+
+
+Détection du mdp utilisateur 
 
 /// TO DIG ///
 
@@ -71,6 +98,5 @@ API => check swagger
 
 analyse apk in web/app/hackazon.apk
 
-Get list file and semgrep =>
-
+ssti => https://hackazon.trackflaw.com/helpdesk/HelpdeskService
 
