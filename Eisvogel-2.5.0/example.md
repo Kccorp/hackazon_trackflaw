@@ -56,8 +56,11 @@ titlepage-background: "background.pdf"
 # 1. Préambule
 
 ## 1.1 Présentation des résultats
+La sécurité globale de l'application web auditée présente plusieurs points d'amélioration notables. L'audit a révélé que certains logiciels utilisés par l'application sont en version dépassée, ce qui expose le système à des vulnérabilités connues. De plus, plusieurs types d'injections, telles que des injections SQL ou des XSS, ont été détectés, indiquant des points d'entrée potentiels pour des attaques exploitant des données malveillantes.
 
-> FIXME: Brief introduction to the findings, summarizing the key takeaways.
+Des problèmes de segmentation ont également été identifiés, avec des configurations de sécurité essentielles qui ne sont pas appliquées, comme l'absence des attributs Secure, HttpOnly, et SameSite sur les cookies de session, augmentant les risques d'attaques liées à la session. Par ailleurs, l'application présente un manque de contrôle d'accès dans certaines parties du système, permettant l'affichage non autorisé de fichiers sensibles, tels que /app/hackazon.apk, ce qui peut conduire à des risques d'exposition de données ou de fonctionnalités non prévues pour le public.
+
+Enfin, l'audit a mis en évidence l'absence de protection CSRF sur certaines parties du site, ce qui pourrait permettre à des attaquants de manipuler des actions au nom des utilisateurs sans leur consentement. Nous recommandons de mettre en place des correctifs pour ces aspects afin d'assurer une meilleure sécurité et de renforcer la protection des données utilisateurs et de l'infrastructure de l'application.
 
 
 ## 1.2 Contexte
@@ -115,8 +118,12 @@ Le pilotage de cette mission a suivi une approche structurée afin d'assurer une
 
 
 ## 1.4 Actions de nettoyage recommandées
-
-> FIXME: Recommendations for post-pentest cleanup actions, including removing test accounts, resetting passwords, or patching vulnerabilities.
+Suite à cet audit plusieurs action de néttoyage sont à prévoir.
+- C'est d'abord, la suppréssion des différents comptes utilisateurs et leur fichier respectifs  créé soit : pentest1 et pentest2.
+- C'est ensuite la suppréssion des difféntes demande Helpdesk comprenant les id : 29, 28, 27, 26, 25, 24, 23 et 22
+- Un nettoyage des commentaire sur la FAQ est aussi à prévoir
+- Une suppréssion des review sur l'article id=81
+- La suppression de toutes les commandes faites par les comptes pentest1 et pentest2
 
 # 2. Synthèse Managériale
 
