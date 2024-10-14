@@ -477,7 +477,6 @@ La capture d'écran ci-dessus montre les résultats d'une analyse des versions l
 
 
 #### Gestion des identités
-> FIXME: Assessment of identity management and user roles.
 
 ##### Détection de mots de passe utilisateur
 \begin{table}[htbp]
@@ -640,7 +639,41 @@ Te: trailers
 
 #### Authentification
 
-> FIXME: Review of authentication mechanisms (e.g., password policies, multi-factor authentication).
+##### Absence de protection renforcée par authentification multifacteur
+Une vulnérabilité critique a été identifiée sur la plateforme Hackazon concernant l'absence de mécanisme d'authentification multifacteur (MFA). En l'absence de cette couche de sécurité supplémentaire, les comptes des utilisateurs sont exposés à un risque accru de compromission, notamment par des attaques par phishing, des tentatives de force brute ou d'autres méthodes d'authentification non sécurisées.
+
+\begin{table}[htbp]
+\centering
+\renewcommand{\arraystretch}{1.5} % Augmente l'espacement entre les lignes
+\begin{tabular}{|>{\centering\arraybackslash}p{4cm}|>{\centering\arraybackslash}p{4cm}|>{\centering\arraybackslash}p{4cm}|>{\centering\arraybackslash}p{3cm}|}
+\hline
+\multicolumn{4}{|>{\columncolor{red}\centering\arraybackslash}p{16.30cm}|}{\textcolor{white}{\textbf{VULN-MFA-ABSENCE : Absence d'authentification multifacteur	}}} \\ \hline
+\rowcolor{gray!30}
+\textbf{\textcolor{black}{État}} & \textbf{Impact} & \textbf{Difficulté d'exploitation} & \textbf{Sévérité} \\ \hline
+\textbf{Avérée} & \textbf{Modéré} & \textbf{Facile} & \textbf{2 / 4} \\
+\hline
+\end{tabular}
+\end{table}
+
+**Détails de l'exploitation**
+La vulnérabilité provient de l'absence d'une méthode d'authentification renforcée lors de la connexion des utilisateurs. Cela signifie que seuls les identifiants de connexion (nom d'utilisateur et mot de passe) sont nécessaires pour accéder à des comptes sensibles, permettant ainsi aux attaquants de prendre le contrôle des comptes d'utilisateur avec un minimum d'efforts.
+
+*Remediation*
+
+\begin{table}[htbp]
+\centering
+\renewcommand{\arraystretch}{1.5} % Augmente l'espacement entre les lignes
+\begin{tabular}{|>{\centering\arraybackslash}p{5cm}|>{\centering\arraybackslash}p{5cm}|>{\centering\arraybackslash}p{5cm}|}
+\hline
+\multicolumn{3}{|>{\columncolor{cyan}\centering\arraybackslash}p{16.30cm}|}{\textcolor{white}{\textbf{VULN-06 : Injection de commandes}}} \\ \hline
+\textbf{Complexité estimée : Moyenne} & \textbf{Travail/coût estimé : Élevé} & \textbf{Priorité estimée : 4 / 4} \\
+\hline
+\multicolumn{3}{|p{16.30cm}|}{
+    Implémenter un mécanisme d'authentification multifacteur : Ajouter une couche de sécurité en demandant aux utilisateurs de vérifier leur identité via un second facteur, tel qu'un code envoyé par SMS, un e-mail de vérification ou une application d'authentification.
+} \\
+\hline
+\end{tabular}
+\end{table}
 
 ##### Absence de fonctionnalité de changement de mot de passe
 
@@ -691,7 +724,46 @@ La capture d'écran ci-dessus montre que l'interface utilisateur ne présente au
 
 #### Autorisations
 
-> FIXME: Evaluation of authorization checks and privilege separation.
+##### Absence de séparation des droits d'accès à l'API
+Une vulnérabilité significative a été identifiée concernant la gestion des rôles d'accès dans l'API de la plateforme Hackazon. Actuellement, il n'existe pas de rôle administrateur distinct, ce qui signifie que tous les utilisateurs ont accès à 100 % des fonctionnalités de l'API. Cette absence de contrôle d'accès approprié expose l'application à divers risques de sécurité, permettant aux utilisateurs non autorisés d'exécuter des actions sensibles et potentiellement nuisibles.
+
+\begin{table}[htbp]
+\centering
+\renewcommand{\arraystretch}{1.5} % Augmente l'espacement entre les lignes
+\begin{tabular}{|>{\centering\arraybackslash}p{4cm}|>{\centering\arraybackslash}p{4cm}|>{\centering\arraybackslash}p{4cm}|>{\centering\arraybackslash}p{3cm}|}
+\hline
+\multicolumn{4}{|>{\columncolor{red}\centering\arraybackslash}p{16.30cm}|}{\textcolor{white}{\textbf{VULN-API-ACCESS : Absence de rôle administrateur dans l'API}}} \\ \hline
+\rowcolor{gray!30}
+\textbf{\textcolor{black}{État}} & \textbf{Impact} & \textbf{Difficulté d'exploitation} & \textbf{Sévérité} \\ \hline
+\textbf{Avérée} & \textbf{Élevé} & \textbf{Facile} & \textbf{4 / 4} \\
+\hline
+\end{tabular}
+\end{table}
+
+**Détails de l'exploitation** 
+Cette vulnérabilité résulte de l'absence de contrôles d'accès basés sur les rôles pour les différentes fonctionnalités exposées par l'API. Par conséquent, toute personne disposant d'une clé d'accès à l'API peut exécuter des opérations réservées aux administrateurs, telles que la modification ou la suppression de données, sans aucune restriction.
+
+*Remediation*
+
+\begin{table}[htbp]
+\centering
+\renewcommand{\arraystretch}{1.5} % Augmente l'espacement entre les lignes
+\begin{tabular}{|>{\centering\arraybackslash}p{5cm}|>{\centering\arraybackslash}p{5cm}|>{\centering\arraybackslash}p{5cm}|}
+\hline
+\multicolumn{3}{|>{\columncolor{cyan}\centering\arraybackslash}p{16.30cm}|}{\textcolor{white}{\textbf{VULN-API-ACCESS : Implémenter une gestion des rôles d'accès}}} \\ \hline
+\textbf{Complexité estimée : Élevé} & \textbf{Travail/coût estimé : Élevé} & \textbf{Priorité estimée : 4 / 4} \\
+\hline
+\multicolumn{3}{|p{16.30cm}|}{
+    Actions correctives recommandées :
+- Implémenter une gestion des rôles d'accès : Créer des rôles d'utilisateur distincts, tels que « administrateur », « utilisateur » et « invité », avec des permissions spécifiques pour chaque rôle. Cela permettra de restreindre l'accès aux fonctionnalités critiques de l'API.
+- Vérification des permissions au niveau de l'API : Chaque appel API doit inclure des vérifications de permission pour s'assurer que l'utilisateur a les droits nécessaires pour exécuter l'action demandée.
+- Audit régulier des droits d'accès : Effectuer des audits réguliers pour vérifier les permissions des utilisateurs et s'assurer qu'elles sont correctement appliquées.
+- Formation des développeurs : Sensibiliser les développeurs aux bonnes pratiques de sécurité et à l'importance des contrôles d'accès dans le développement d'API.
+} \\
+\hline
+\end{tabular}
+\end{table}
+
 
 ##### Création d'un jeton API ouvert à tous les utilisateurs
 
@@ -815,9 +887,6 @@ En analysant les cookies de session de l'application, il a été constaté que l
 \hline
 \end{tabular}
 \end{table}
-
-
-
 
 
 
@@ -1230,6 +1299,135 @@ Cependant, il a été observé que seule la lecture de fichiers arbitraires éta
 \end{tabular}
 \end{table}
 
+
+#### Gestion des erreurs
+
+La gestion des erreurs HTTP a été vérifiée, et le comportement de la page répond correctement aux différents tests effectués. L'URL d'erreur n'est pas affichée sur la page, garantissant ainsi une meilleure sécurité et une expérience utilisateur plus fluide.
+
+![Gestion erreur 404](images/404.png)
+
+#### Cryptographie
+
+**Mauvaise configuration SSL**
+
+\begin{table}[htbp]
+\centering
+\renewcommand{\arraystretch}{1.5} % Augmente l'espacement entre les lignes
+\begin{tabular}{|>{\centering\arraybackslash}p{4cm}|>{\centering\arraybackslash}p{4cm}|>{\centering\arraybackslash}p{4cm}|>{\centering\arraybackslash}p{3cm}|}
+\hline
+\multicolumn{4}{|>{\columncolor{red}\centering\arraybackslash}p{16.30cm}|}{\textcolor{white}{\textbf{VULN-SSL : Mauvaise configuration SSL}}} \\ \hline
+\rowcolor{gray!30}
+\textbf{\textcolor{black}{État}} & \textbf{Impact} & \textbf{Difficulté d'exploitation} & \textbf{Sévérité} \\ \hline
+\textbf{Avérée} & \textbf{Moyen} & \textbf{Modéré} & \textbf{2 / 4} \\
+\hline
+\end{tabular}
+\end{table}
+
+Lors de l'audit, des problèmes de configuration SSL ont été identifiés, affectant la sécurité des communications entre les utilisateurs et le serveur, augmentant ainsi le risque d'attaques de type "Man-in-the-Middle" (MITM). L'absence de HSTS et l'utilisation de suites de chiffrement faibles sont deux points critiques qui compromettent la sécurité des connexions.
+
+---
+
+![Manque HSTS](images/hsts.png)
+
+![Suites de chiffrement faibles](images/cipher.png)
+
+Les captures d'écran ci-dessus montrent les résultats d'un scan SSL, révélant l'absence de HSTS et la prise en charge de suites de chiffrement obsolètes.
+
+---
+
+**Remediation**
+
+\begin{table}[htbp]
+\centering
+\renewcommand{\arraystretch}{1.5} % Augmente l'espacement entre les lignes
+\begin{tabular}{|>{\centering\arraybackslash}p{5cm}|>{\centering\arraybackslash}p{5cm}|>{\centering\arraybackslash}p{5cm}|}
+\hline
+\multicolumn{3}{|>{\columncolor{cyan}\centering\arraybackslash}p{16.30cm}|}{\textcolor{white}{\textbf{VULN-SSL : Recommandation pour sécuriser la configuration SSL}}} \\ \hline
+\textbf{Complexité estimée : Faible} & \textbf{Travail/coût estimé : Faible} & \textbf{Priorité estimée : 2 / 4} \\
+\hline
+\multicolumn{3}{|p{16.30cm}|}{
+    Il est recommandé de renforcer la configuration SSL en appliquant les actions suivantes :
+    1. Activer HSTS : Permet de forcer les navigateurs à utiliser des connexions HTTPS uniquement, même si une tentative est faite en HTTP. Cela protège contre les attaques de redirection et de downgrade.
+    2. Désactiver les suites de chiffrement faibles : Les protocoles et ciphers obsolètes (par exemple, TLS 1.0, TLS 1.1, et des ciphers RC4) doivent être désactivés pour empêcher les attaques exploitant ces algorithmes faibles.
+    3. Configurer une liste de ciphers robustes et modernes : Utiliser uniquement des ciphers modernes et recommandés tels que AES-GCM avec TLS 1.2 ou supérieur.
+} \\
+\hline
+\end{tabular}
+\end{table}
+
+#### Processus métier
+
+##### Modification du processus de commande 
+Lors de l'audite nous avons tester la fonctionnalitée de passage de commande mais cette dernière est protégé par des token anti-csrf.
+Voici un exemple de requête envoyé au serveur.
+```
+POST /checkout/placeOrder HTTP/2
+Host: hackazon.trackflaw.com
+Cookie: visited_products=%2C64%2C72%2C1%2C81%2C101%2C; PHPSESSID=XXXXXXXXXXX
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:131.0) Gecko/20100101 Firefox/131.0
+Accept: application/json, text/javascript, */*; q=0.01
+Accept-Language: fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3
+Accept-Encoding: gzip, deflate, br
+Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+X-Requested-With: XMLHttpRequest
+Content-Length: 53
+Origin: https://hackazon.trackflaw.com
+Referer: https://hackazon.trackflaw.com/checkout/confirmation
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+X-Pwnfox-Color: red
+Priority: u=0
+Te: trailers
+
+_csrf_checkout_step4=tq3ogmr7kMQotRPGmdJCrWybOm9ueaOB
+```
+
+Grâce aux tokens anti-CSRF, il n'est pas possible de modifier les informations utilisateur ou les détails de la commande durant le processus d'achat. Chaque étape est protégée par un token, garantissant que seules les requêtes initiées par l'utilisateur sont acceptées. Cela renforce l'intégrité des transactions, réduisant le risque de fraudes, car tout changement non autorisé est bloqué par le serveur.
+
+##### Absence de Fonctionnalité de Paiement
+Dans une plateforme de commerce électronique, la capacité à effectuer des paiements est fondamentale pour son bon fonctionnement et sa viabilité. L'absence de fonctionnalité de paiement représente une vulnérabilité critique.
+
+\begin{table}[htbp]
+\centering
+\renewcommand{\arraystretch}{1.5} % Augmente l'espacement entre les lignes
+\begin{tabular}{|>{\centering\arraybackslash}p{4cm}|>{\centering\arraybackslash}p{4cm}|>{\centering\arraybackslash}p{4cm}|>{\centering\arraybackslash}p{3cm}|}
+\hline
+\multicolumn{4}{|>{\columncolor{red}\centering\arraybackslash}p{16.30cm}|}{\textcolor{white}{\textbf{VULN-ABSENCE-PAYMENT : Absence de fonctionnalité de paiement}}} \\ \hline
+\rowcolor{gray!30}
+\textbf{\textcolor{black}{État}} & \textbf{Impact} & \textbf{Difficulté d'exploitation} & \textbf{Sévérité} \\ \hline
+\textbf{Avérée} & \textbf{Très élevé} & \textbf{Facile} & \textbf{4 / 4} \\
+\hline
+\end{tabular}
+\end{table}
+
+**Détails de l'exploitation**
+La vulnérabilité a été observée lors de la tentative d'achat d'un produit sur la plateforme, où aucune option de paiement n'était disponible. Cela signifie que, même si les utilisateurs peuvent ajouter des articles à leur panier et les sélectionner pour achat, ils ne peuvent pas conclure la transaction en raison de l'absence d'une interface de paiement.
+
+*Remediation*
+
+\begin{table}[htbp]
+\centering
+\renewcommand{\arraystretch}{1.5} % Augmente l'espacement entre les lignes
+\begin{tabular}{|>{\centering\arraybackslash}p{5cm}|>{\centering\arraybackslash}p{5cm}|>{\centering\arraybackslash}p{5cm}|}
+\hline
+\multicolumn{3}{|>{\columncolor{cyan}\centering\arraybackslash}p{16.30cm}|}{\textcolor{white}{\textbf{VULN-ABSENCE-PAYMENT :  Implémenter une fonctionnalité de paiement sécurisée}}} \\ \hline
+\textbf{Complexité estimée : Élevée} & \textbf{Travail/coût estimé : Élevé} & \textbf{Priorité estimée : 4 / 4} \\
+\hline
+\multicolumn{3}{|p{16.30cm}|}{
+    Actions correctives recommandées :
+- Développer et intégrer une solution de paiement sécurisée : Collaborer avec des fournisseurs de services de paiement reconnus pour intégrer une solution de paiement fiable et sécurisée.
+- Tester le processus de paiement : Avant le déploiement, effectuer des tests approfondis pour garantir que le processus de paiement fonctionne sans erreur et est convivial.
+- Assurer la conformité PCI : Veiller à ce que toutes les transactions de paiement soient conformes aux normes de sécurité des données de l'industrie des cartes de paiement (PCI DSS).
+- Fournir des mises à jour et des notifications : Informer les utilisateurs des mises à jour concernant la fonctionnalité de paiement et s'assurer qu'ils sont conscients des nouvelles options disponibles.
+} \\
+\hline
+\end{tabular}
+\end{table}
+
+
+#### Côté client
+
 ##### Téléversement de Fichier Non Sécurisé
 
 Une grave vulnérabilité de sécurité a été découverte concernant le téléversement de fichiers sur la plateforme Hackazon. Actuellement, il est possible de téléverser des fichiers sur le serveur sans aucune vérification ou contrôle, ce qui expose l'application à de nombreux risques de sécurité, notamment la possibilité d'exécuter des scripts malveillants, de compromettre le serveur ou de lancer des attaques supplémentaires contre les utilisateurs.
@@ -1322,68 +1520,6 @@ En téléversant ce fichier PHP malveillant, un attaquant pourrait ensuite navig
 \hline
 \end{tabular}
 \end{table}
-
-
-#### Gestion des erreurs
-
-> FIXME: Review of how the application handles errors (e.g., verbose error messages).
-
-#### Cryptographie
-
-**Mauvaise configuration SSL**
-
-\begin{table}[htbp]
-\centering
-\renewcommand{\arraystretch}{1.5} % Augmente l'espacement entre les lignes
-\begin{tabular}{|>{\centering\arraybackslash}p{4cm}|>{\centering\arraybackslash}p{4cm}|>{\centering\arraybackslash}p{4cm}|>{\centering\arraybackslash}p{3cm}|}
-\hline
-\multicolumn{4}{|>{\columncolor{red}\centering\arraybackslash}p{16.30cm}|}{\textcolor{white}{\textbf{VULN-SSL : Mauvaise configuration SSL}}} \\ \hline
-\rowcolor{gray!30}
-\textbf{\textcolor{black}{État}} & \textbf{Impact} & \textbf{Difficulté d'exploitation} & \textbf{Sévérité} \\ \hline
-\textbf{Avérée} & \textbf{Moyen} & \textbf{Modéré} & \textbf{2 / 4} \\
-\hline
-\end{tabular}
-\end{table}
-
-Lors de l'audit, des problèmes de configuration SSL ont été identifiés, affectant la sécurité des communications entre les utilisateurs et le serveur, augmentant ainsi le risque d'attaques de type "Man-in-the-Middle" (MITM). L'absence de HSTS et l'utilisation de suites de chiffrement faibles sont deux points critiques qui compromettent la sécurité des connexions.
-
----
-
-![Manque HSTS](images/hsts.png)
-
-![Suites de chiffrement faibles](images/cipher.png)
-
-Les captures d'écran ci-dessus montrent les résultats d'un scan SSL, révélant l'absence de HSTS et la prise en charge de suites de chiffrement obsolètes.
-
----
-
-**Remediation**
-
-\begin{table}[htbp]
-\centering
-\renewcommand{\arraystretch}{1.5} % Augmente l'espacement entre les lignes
-\begin{tabular}{|>{\centering\arraybackslash}p{5cm}|>{\centering\arraybackslash}p{5cm}|>{\centering\arraybackslash}p{5cm}|}
-\hline
-\multicolumn{3}{|>{\columncolor{cyan}\centering\arraybackslash}p{16.30cm}|}{\textcolor{white}{\textbf{VULN-SSL : Recommandation pour sécuriser la configuration SSL}}} \\ \hline
-\textbf{Complexité estimée : Faible} & \textbf{Travail/coût estimé : Faible} & \textbf{Priorité estimée : 2 / 4} \\
-\hline
-\multicolumn{3}{|p{16.30cm}|}{
-    Il est recommandé de renforcer la configuration SSL en appliquant les actions suivantes :
-    1. Activer HSTS : Permet de forcer les navigateurs à utiliser des connexions HTTPS uniquement, même si une tentative est faite en HTTP. Cela protège contre les attaques de redirection et de downgrade.
-    2. Désactiver les suites de chiffrement faibles : Les protocoles et ciphers obsolètes (par exemple, TLS 1.0, TLS 1.1, et des ciphers RC4) doivent être désactivés pour empêcher les attaques exploitant ces algorithmes faibles.
-    3. Configurer une liste de ciphers robustes et modernes : Utiliser uniquement des ciphers modernes et recommandés tels que AES-GCM avec TLS 1.2 ou supérieur.
-} \\
-\hline
-\end{tabular}
-\end{table}
-
-#### Processus métier
-
-> FIXME: Assessment of business logic flaws.
-
-#### Côté client
-
-> FIXME: Client-side vulnerabilities (e.g., JavaScript security, DOM-based XSS).
 
 # 5. Annexe
 
