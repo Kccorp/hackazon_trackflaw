@@ -4,7 +4,7 @@ author:
   - "Keissy Bod"
   - "Milan Pouteau"
 date: "October 2024"
-titlepage: true,
+titlepage: true
 titlepage-text-color: "FFFFFF"
 titlepage-rule-color: "360049"
 titlepage-rule-height: 0
@@ -28,6 +28,7 @@ titlepage-background: "background.pdf"
 3. [Synthèse Technique](#synthèse-technique)
 
 4. [Test d'intrusion externe et applicatif](#test-dintrusion-externe-et-applicatif)
+
    - 4.1 [Évaluation infrastructure](#évaluation-infrastructure)
      - 4.1.1 [Réseau](#réseau)
      - 4.1.2 [Services](#services)
