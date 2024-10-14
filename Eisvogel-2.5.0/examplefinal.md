@@ -151,8 +151,7 @@ Suite à cet audit plusieurs actions de nettoyage sont à prévoir :
 
 #### Configuration et mécanismes de déploiement
 
-
-
+##### Acceptation de méthodes HTTP excessive
 \begin{table}[htbp]
 \centering
 \renewcommand{\arraystretch}{1.5} % Augmente l'espacement entre les lignes
@@ -172,7 +171,7 @@ De nombreuses méthodes HTTP, telles que `PATCH`, `DELETE`, `TRACE`, et d'autres
 
 ---
 
-**Remediation**
+*Remediation*
 
 \begin{table}[htbp]
 \centering
@@ -189,6 +188,9 @@ De nombreuses méthodes HTTP, telles que `PATCH`, `DELETE`, `TRACE`, et d'autres
 \end{tabular}
 \end{table}
 
+
+
+##### Absence de protection anti-malware
 
 \begin{table}[htbp]
 \centering
@@ -208,7 +210,7 @@ L'application ne dispose pas de protection contre les logiciels malveillants. Un
 ![Capture d'écran montrant le fichier EICAR téléchargé et accessible sur le serveur.](images/eicar_file.png)
 
 
-**Remediation**
+*Remediation*
 
 \begin{table}[htbp]
 \centering
@@ -226,7 +228,7 @@ L'application ne dispose pas de protection contre les logiciels malveillants. Un
 \end{table}
 
 
-**Insecure File Distribution**
+##### Insecure File Distribution
 
 \begin{table}[htbp]
 \centering
@@ -249,7 +251,7 @@ Il a été observé que l'application distribue des fichiers APK sans aucune val
 
 ---
 
-**Remediation**
+*Remediation*
 
 \begin{table}[htbp]
 \centering
@@ -268,7 +270,7 @@ Il a été observé que l'application distribue des fichiers APK sans aucune val
 
 
 
-##### **Public Exposure of Admin Panel**
+##### Public Exposure of Admin Panel
 
 \begin{table}[htbp]
 \centering
@@ -311,7 +313,7 @@ Priority: u=0, i
 Te: trailers
 ```
 
-**Remediation**
+*Remediation*
 
 \begin{table}[htbp]
 \centering
@@ -328,7 +330,7 @@ Te: trailers
 \end{tabular}
 \end{table}
 
-**Mauvaise configuration du fichier cross-domain.xml (Flash**
+##### Mauvaise configuration du fichier cross-domain.xml (Flash)
 
 \begin{table}[htbp]
 \centering
@@ -353,7 +355,7 @@ La capture d'écran montre un exemple de fichier **cross-domain.xml** avec des a
 
 ---
 
-**Remediation**
+*Remediation*
 
 \begin{table}[htbp]
 \centering
@@ -373,7 +375,7 @@ La capture d'écran montre un exemple de fichier **cross-domain.xml** avec des a
 \end{tabular}
 \end{table}
 
-**Versions dépréciées de logiciels utilisés (PHP, jQuery, Flash, MySQL)**
+##### Versions dépréciées de logiciels utilisés (PHP, jQuery, Flash, MySQL)
 
 \begin{table}[htbp]
 \centering
@@ -404,7 +406,7 @@ La capture d'écran ci-dessus montre les résultats d'une analyse des versions l
 
 ---
 
-**Remediation**
+*Remediation*
 
 \begin{table}[htbp]
 \centering
@@ -426,6 +428,8 @@ La capture d'écran ci-dessus montre les résultats d'une analyse des versions l
 
 #### Gestion des identités
 > FIXME: Assessment of identity management and user roles.
+
+##### Détection de mots de passe utilisateur
 \begin{table}[htbp]
 \centering
 \renewcommand{\arraystretch}{1.5} % Augmente l'espacement entre les lignes
@@ -446,7 +450,7 @@ Lors de l'analyse du mécanisme d'authentification, plusieurs mots de passe util
 
 ---
 
-**Remediation**
+*Remediation*
 
 \begin{table}[htbp]
 \centering
@@ -465,7 +469,7 @@ Lors de l'analyse du mécanisme d'authentification, plusieurs mots de passe util
 
 
 
-**Accès à des ressources n'appartenant pas à l'utilisateur (IDOR)**
+##### Accès à des ressources n'appartenant pas à l'utilisateur (IDOR)
 
 \begin{table}[htbp]
 \centering
@@ -565,7 +569,7 @@ Te: trailers
 
 ---
 
-**Remediation**
+*Remediation*
 
 \begin{table}[htbp]
 \centering
@@ -588,7 +592,7 @@ Te: trailers
 
 > FIXME: Review of authentication mechanisms (e.g., password policies, multi-factor authentication).
 
-**Absence de fonctionnalité de changement de mot de passe**
+##### Absence de fonctionnalité de changement de mot de passe
 
 \begin{table}[htbp]
 \centering
@@ -613,7 +617,7 @@ La capture d'écran ci-dessus montre que l'interface utilisateur ne présente au
 
 ---
 
-**Remediation**
+*Remediation*
 
 \begin{table}[htbp]
 \centering
@@ -638,7 +642,8 @@ La capture d'écran ci-dessus montre que l'interface utilisateur ne présente au
 #### Autorisations
 
 > FIXME: Evaluation of authorization checks and privilege separation.
-**Création d'un jeton API ouvert à tous les utilisateurs**
+
+##### Création d'un jeton API ouvert à tous les utilisateurs
 
 \begin{table}[htbp]
 \centering
@@ -663,7 +668,7 @@ Sur la capture d'écran ci-dessus, nous avons pu demander un jeton API en fourni
 
 ---
 
-**Remediation**
+*Remediation*
 
 \begin{table}[htbp]
 \centering
@@ -681,9 +686,10 @@ Sur la capture d'écran ci-dessus, nous avons pu demander un jeton API en fourni
 \hline
 \end{tabular}
 \end{table}
+
 #### Gestion des sessions
 
-
+##### Absence d'expiration de session
 
 \begin{table}[htbp]
 \centering
@@ -720,7 +726,7 @@ En vérifiant les sécurités des cookies, on peut apercevoir que les sessions n
 \end{tabular}
 \end{table}
 
-
+##### Cookie de Session sans Attributs Secure, HttpOnly, et SameSite
 
 \begin{table}[htbp]
 \centering
@@ -743,7 +749,7 @@ En analysant les cookies de session de l'application, il a été constaté que l
 
 ---
 
-**Remediation**
+*Remediation*
 
 \begin{table}[htbp]
 \centering
@@ -767,7 +773,7 @@ En analysant les cookies de session de l'application, il a été constaté que l
 
 #### Validation des entrées utilisateurs
 
-
+##### Injection de commandes
 
 \begin{table}[htbp]
 \centering
@@ -811,7 +817,7 @@ Te: trailers
 
 ---
 
-**Remediation**
+*Remediation*
 
 \begin{table}[htbp]
 \centering
@@ -901,7 +907,7 @@ email=toto@tata.fr
 
 ---
 
-**Remediation**
+*Remediation*
 
 \begin{table}[htbp]
 \centering
