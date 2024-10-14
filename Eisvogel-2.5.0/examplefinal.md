@@ -268,7 +268,7 @@ Il a été observé que l'application distribue des fichiers APK sans aucune val
 
 
 
-**Public Exposure of Admin Panel**
+##### **Public Exposure of Admin Panel**
 
 \begin{table}[htbp]
 \centering
