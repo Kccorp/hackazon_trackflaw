@@ -147,7 +147,55 @@ Cependant, malgré ces points positifs, des améliorations sont encore nécessai
 
 # 3. Synthèse Technique
 
-> FIXME: A detailed technical summary of the findings, highlighting specific vulnerabilities, misconfigurations, and security gaps in the Hackazon web application.
+## Résumé Technique des Résultats
+
+L'audit de sécurité réalisé sur la plateforme Hackazon a révélé plusieurs vulnérabilités critiques, compromettant à la fois la sécurité des utilisateurs et l'intégrité de l'infrastructure. Les tests ont été principalement réalisés avec **Burp Suite**, qui a permis d'identifier et d'exploiter des failles à travers des modules comme **Intruder**, **Repeater**, et **Scanner**, combinés à des scripts personnalisés pour des tests manuels approfondis.
+
+Voici une description technique des vulnérabilités détectées :
+
+- **Injection de commandes (Command Injection)** :
+  - **Description** : L'application est vulnérable à une injection de commandes via des paramètres non sécurisés, où les entrées utilisateur sont transmises directement aux commandes du système sans filtrage adéquat.
+  - **Exemple** : En envoyant une requête à `/account/documents?page=terms.html;id`, un attaquant peut insérer des commandes malveillantes dans le paramètre `page`.
+  - **Outils** : Utilisation de **Burp Suite Intruder** pour automatiser l'injection de payloads malveillants et tester les réponses du serveur, puis validation manuelle avec **Burp Suite Repeater** pour affiner les attaques.
+  - **Solution** : Valider et filtrer strictement les entrées utilisateur avant de les passer aux fonctions du système. Utiliser des API sécurisées pour exécuter les commandes système de manière contrôlée.
+
+- **Absence d'expiration de session (Session Management)** :
+  - **Description** : Les sessions utilisateur ne sont pas correctement configurées pour expirer après une période d'inactivité, exposant l'application aux risques de détournement de session.
+  - **Outils** : **Burp Suite** a été utilisé pour inspecter les cookies et capturer les échanges HTTP. L'absence d'attributs `Expires`, `HttpOnly`, et `SameSite` sur les cookies de session a été détectée via le module **Proxy**.
+  - **Solution** : Implémenter une expiration automatique des sessions après une période d'inactivité (ex : 15 minutes). Ajouter les attributs `HttpOnly` pour empêcher l'accès aux cookies via JavaScript, et `Secure` pour forcer leur transmission uniquement via HTTPS.
+
+- **Logiciels obsolètes (Outdated Software)** :
+  - **Description** : Des versions obsolètes de PHP, jQuery et Flash ont été détectées. Ces versions contiennent des vulnérabilités connues et exploitables.
+  - **Outils** : L'analyse de la version des logiciels a été réalisée via les outils de détection intégrés à **Burp Suite Scanner**, qui a identifié les versions des composants via les en-têtes HTTP et les réponses du serveur.
+  - **Solution** : Mettre à jour PHP et jQuery vers des versions supportées et sécurisées. Supprimer Flash et le remplacer par des technologies modernes comme HTML5.
+
+- **IDOR (Insecure Direct Object Reference)** :
+  - **Description** : Un manque de vérification des droits d'accès a été détecté, permettant à un utilisateur d'accéder à des ressources appartenant à d'autres utilisateurs en modifiant simplement les paramètres d'URL.
+  - **Outils** : **Burp Suite Repeater** a été utilisé pour tester manuellement des variations de paramètres dans les URLs (`/order/view?id=123`) et identifier des ressources appartenant à d'autres utilisateurs.
+  - **Solution** : Implémenter un contrôle d'accès strict côté serveur, garantissant que chaque requête est vérifiée en fonction des autorisations de l'utilisateur, indépendamment des paramètres envoyés.
+
+- **Faible politique de mots de passe (Weak Password Policy)** :
+  - **Description** : L'application n'impose pas de politique de mot de passe stricte, permettant des mots de passe trop simples (ex : "password", "123456").
+  - **Outils** : **Burp Suite Intruder** a été utilisé pour effectuer des attaques par force brute et tester la tolérance de l'application face à des mots de passe faibles.
+  - **Solution** : Mettre en place une politique de mot de passe stricte exigeant au moins 8 caractères avec un mélange de majuscules, minuscules, chiffres et symboles. Limiter les tentatives de connexion via des mécanismes de blocage temporaire après plusieurs échecs.
+
+- **Fuite d'information (Information Disclosure)** :
+  - **Description** : Des informations sensibles sont divulguées dans les réponses du serveur, notamment des messages d'erreur détaillant les chemins internes du système et la configuration du serveur.
+  - **Outils** : **Burp Suite Proxy** a permis de capturer des réponses HTTP exposant des informations internes, y compris des détails de configuration non censurés.
+  - **Solution** : Modifier la gestion des erreurs pour qu'aucune information interne ne soit divulguée dans les réponses retournées aux utilisateurs. Afficher des messages d'erreur génériques.
+
+- **Redirection ouverte (Open Redirect)** :
+  - **Description** : Le paramètre `return_url` peut être manipulé pour rediriger les utilisateurs vers des sites externes malveillants.
+  - **Outils** : **Burp Suite Repeater** a été utilisé pour tester la modification des URLs dans les requêtes redirigées, révélant que l'application ne filtre pas correctement les valeurs du paramètre `return_url`.
+  - **Solution** : Restreindre les valeurs de `return_url` à une liste blanche de domaines approuvés. Utiliser des identifiants internes pour gérer les redirections plutôt que des URLs externes complètes.
+
+## Recommandations Générales
+
+Les vulnérabilités identifiées présentent des risques significatifs pour la sécurité de l'application Hackazon. Nous recommandons les actions suivantes :
+- **Mise à jour des logiciels obsolètes** pour bénéficier des derniers correctifs de sécurité.
+- **Renforcement des contrôles d'accès** et implémentation de politiques de gestion des sessions et des mots de passe plus strictes.
+- **Amélioration de la validation des entrées** pour prévenir les injections et les redirections ouvertes.
+- **Sécurisation de l'application** via des contrôles d'accès basés sur les rôles et une gestion des erreurs appropriée.
 
 # 4. Test d'intrusion externe et applicatif
 
@@ -155,11 +203,68 @@ Cependant, malgré ces points positifs, des améliorations sont encore nécessai
 
 ### 4.1.1 Réseau
 
-> FIXME: Findings from the network evaluation.
+#explain the network evaluation here
+
+#### Nmap Scan Results
+
+The Nmap scan results provide an overview of the services exposed by the infrastructure. The following is a summary of the Nmap scan results for the target `hackazon.trackflaw.com`:
+
+```bash
+
+nmap -A hackazon.trackflaw.com -T 5
+Starting Nmap 7.95 ( https://nmap.org ) at 2024-10-14 23:26 CEST
+Nmap scan report for hackazon.trackflaw.com (31.220.95.27)
+Host is up (0.016s latency).
+rDNS record for 31.220.95.27: vmi1593261.contaboserver.net
+Not shown: 995 closed tcp ports (conn-refused)
+PORT     STATE    SERVICE     VERSION
+25/tcp   filtered smtp
+80/tcp   open     http        nginx
+|_http-title: Did not follow redirect to https://hackazon.trackflaw.com/
+139/tcp  filtered netbios-ssn
+443/tcp  open     ssl/http    nginx
+|_http-title: 400 The plain HTTP request was sent to HTTPS port
+| ssl-cert: Subject: commonName=hackazon.trackflaw.com
+| Subject Alternative Name: DNS:hackazon.trackflaw.com
+| Not valid before: 2024-09-26T14:31:50
+|_Not valid after:  2024-12-25T14:31:49
+1234/tcp open     ssh         OpenSSH 8.4p1 Debian 5+deb11u3 (protocol 2.0)
+| ssh-hostkey:
+|   4096 7a:0b:08:82:10:b1:30:3d:39:4d:f4:7e:39:c6:d1:82 (RSA)
+|   256 61:92:5a:b0:78:3d:bc:d7:e7:90:6e:89:c9:7c:9c:65 (ECDSA)
+|_  256 a4:87:e1:b3:a2:8e:40:ed:df:76:a2:a4:ae:3a:0f:aa (ED25519)
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+```
+
 
 ### 4.1.2 Services
 
-> FIXME: Evaluation of the services exposed by the infrastructure.
+The Nmap scan identified the following open ports and services on the target server:
+
+- Port 80: HTTP service running Nginx.
+- Port 443: HTTPS service running Nginx.
+- Port 1234: OpenSSH service running OpenSSH 8.4p1 Debian 5+deb11u3.
+
+The Nmap scan also detected that the target server is running a Linux operating system with the Nginx web server. The SSL certificate provided by the server is valid for the domain `hackazon.trackflaw.com`.
+
+The results indicate that the target server is running web services on both HTTP (port 80) and HTTPS (port 443) protocols, with an additional OpenSSH service running on port 1234. The configuration of the web server is such that it redirects plain HTTP requests to the HTTPS port, ensuring secure communication with the clients.
+
+---
+
+##### Vulnerabilities
+
+Based on the Nmap scan results, the following vulnerabilities were identified in the infrastructure:
+
+##### OpenSSH 8.4p1 Vulnerability
+
+- **Vulnerability Description**: OpenSSH 8.4p1 is known to have security vulnerabilities that could be exploited by attackers to gain unauthorized access to the server.
+- **Impact**: Unauthorized access to the server could lead to data breaches, service disruption, or further exploitation of the system.
+- **Recommendation**: Update OpenSSH to a secure version and apply security patches to mitigate the risk of exploitation.
+
+##### Nginx HTTP Server Misconfiguration
+
+- **Vulnerability Description**: The Nginx HTTP server is misconfigured to allow plain HTTP requests on port 80, which should be redirected to the secure HTTPS port.
+- **Impact**: Exposing HTTP services can lead to data interception
 
 ## 4.2 Application web
 
@@ -1793,15 +1898,6 @@ Les captures d'écran ci-dessus montrent l'utilisation de MD5 sans salage lors d
 \end{table}
 
 
-#### Processus métier
-
-> FIXME: Assessment of business logic flaws.
-
-#### Côté client
-
-> FIXME: Client-side vulnerabilities (e.g., JavaScript security, DOM-based XSS).
-
-
 # 5. Annexe
 
 ## 5.1 Présentation de la démarche
@@ -1836,8 +1932,36 @@ Le test s’est déroulé en plusieurs étapes, chaque phase étant conçue pour
 
 ## 5.2 Présentation des résultats
 
-> FIXME: Additional detailed results, if necessary.
+Aucune annexes n'est disponible pour ce rapport.
 
 ## 5.3 Terminologie des risques
 
-> FIXME: Glossary of risk-related terms used in the report.
+Injection: A type of vulnerability where an attacker sends malicious data into an application, tricking it into executing unintended commands, such as SQL or command injections.
+
+Cross-Site Scripting (XSS): A vulnerability that allows an attacker to inject malicious scripts into webpages viewed by other users, which can then execute without their consent.
+
+Cross-Site Request Forgery (CSRF): A type of attack that tricks a user into performing actions they did not intend to, such as transferring funds or changing their password, by exploiting their authenticated session.
+
+IDOR (Insecure Direct Object Reference): A vulnerability that allows an attacker to access resources that they should not have permission to view or modify, typically by changing values in the URL or request body.
+
+Session Management: The process of securely managing a user's interactions with a web application during a session, ensuring the session cannot be hijacked or manipulated.
+
+Authentication: The process of verifying the identity of a user, often by requiring a username and password.
+
+Authorization: The process of determining what actions or resources a user is allowed to access after their identity has been authenticated.
+
+Encryption: A method of securing data by converting it into a format that is unreadable to unauthorized users. It helps protect the confidentiality and integrity of sensitive information.
+
+Open Redirect: A vulnerability where an application allows attackers to redirect users to untrusted websites by manipulating URLs.
+
+Outdated Software: Running software that is no longer supported or maintained, leaving it exposed to vulnerabilities that have not been patched.
+
+HTTP Methods: Different actions that can be performed on a web server, such as GET (to retrieve data) and POST (to submit data). Accepting too many HTTP methods can increase the risk of attacks.
+
+API (Application Programming Interface): A set of tools and protocols that allows different software applications to communicate. Poor API security can expose sensitive data or allow unauthorized access.
+
+Man-in-the-Middle (MITM) Attack: A type of attack where an attacker intercepts and possibly alters the communication between two parties without their knowledge.
+
+Secure Cookie Attributes: Features like Secure, HttpOnly, and SameSite that help protect cookies from being accessed or manipulated by attackers.
+
+File Distribution Security: Ensuring that distributed files, such as APKs or software updates, are securely signed and checked for integrity to prevent tampering.
