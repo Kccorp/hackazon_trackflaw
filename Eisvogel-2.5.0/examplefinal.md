@@ -14,44 +14,41 @@ titlepage-background: "background.pdf"
 # SOMMAIRE
 
 1. [Préambule](#préambule)
-    1.1 [Présentation des résultats](#présentation-des-résultats)  
-    1.2 [Contexte](#contexte)  
-    1.3 [Pilotage de la prestation](#pilotage-de-la-prestation)  
-    1.4 [Actions de nettoyage recommandées](#actions-de-nettoyage-recommandées)
+   - 1.1 [Présentation des résultats](#présentation-des-résultats)  
+   - 1.2 [Contexte](#contexte)  
+   - 1.3 [Pilotage de la prestation](#pilotage-de-la-prestation)  
+   - 1.4 [Actions de nettoyage recommandées](#actions-de-nettoyage-recommandées)
 
 2. [Synthèse Managériale](#synthèse-managériale)
-    2.1 [Synthèse générale](#synthèse-générale)
-    2.2 [Synthèse des risques](#synthèse-des-risques)
-    2.3 [Synthèse des vulnérabilités et recommandations](#synthèse-des-vulnérabilités-et-recommandations)
-    2.4 [Remarques](#remarques)
+   - 2.1 [Synthèse générale](#synthèse-générale)
+   - 2.2 [Synthèse des risques](#synthèse-des-risques)
+   - 2.3 [Synthèse des vulnérabilités et recommandations](#synthèse-des-vulnérabilités-et-recommandations)
+   - 2.4 [Remarques](#remarques)
 
 3. [Synthèse Technique](#synthèse-technique)
 
 4. [Test d'intrusion externe et applicatif](#test-dintrusion-externe-et-applicatif)
+   - 4.1 [Évaluation infrastructure](#évaluation-infrastructure)
+     - 4.1.1 [Réseau](#réseau)
+     - 4.1.2 [Services](#services)
+   - 4.2 [Application web](#application-web)  
+     - 4.2.2 [Évaluation application](#évaluation-application)
+       - Collecte d'informations  
+       - Configuration et mécanismes de déploiement  
+       - Gestion des identités  
+       - Authentification  
+       - Autorisations  
+       - Gestion des sessions  
+       - Validation des entrées utilisateurs  
+       - Gestion des erreurs  
+       - Cryptographie  
+       - Processus métier  
+       - Côté client
 
-    4.1 [Évaluation infrastructure](#évaluation-infrastructure)
-        4.1.1 [Réseau](#réseau)
-        4.1.2 [Services](#services)
-
-    4.2 [Application web](#application-web)  
-        4.2.2 [Évaluation application](#évaluation-application)  
-            - Collecte d'informations  
-            - Configuration et mécanismes de déploiement  
-            - Gestion des identités  
-            - Authentification  
-            - Autorisations  
-            - Gestion des sessions  
-            - Validation des entrées utilisateurs  
-            - Gestion des erreurs  
-            - Cryptographie  
-            - Processus métier  
-            - Côté client
-
-5. [Annexe](#annexe)  
-    5.1 [Présentation de la démarche](#présentation-de-la-démarche)
-    5.2 [Présentation des résultats](#présentation-des-résultats-annexe)
-    5.3 [Terminologie des risques](#terminologie-des-risques)
-
+5. [Annexe](#annexe)
+   - 5.1 [Présentation de la démarche](#présentation-de-la-démarche)
+   - 5.2 [Présentation des résultats](#présentation-des-résultats-annexe)
+   - 5.3 [Terminologie des risques](#terminologie-des-risques)
 
 # 1. Préambule
 
@@ -62,9 +59,7 @@ Des problèmes de segmentation ont également été identifiés, avec des config
 
 Enfin, l'audit a mis en évidence l'absence de protection CSRF sur certaines parties du site, ce qui pourrait permettre à des attaquants de manipuler des actions au nom des utilisateurs sans leur consentement. Nous recommandons de mettre en place des correctifs pour ces aspects afin d'assurer une meilleure sécurité et de renforcer la protection des données utilisateurs et de l'infrastructure de l'application.
 
-
 ## 1.2 Contexte
-
 Dans le cadre de cette mission, il nous a été demandé de réaliser un test d'intrusion sur l'application web **Hackazon** accessible via l'URL [https://hackazon.trackflaw.com/](https://hackazon.trackflaw.com/). Hackazon est une plateforme de test et d'évaluation de la sécurité, souvent utilisée pour simuler des scénarios d'attaques web afin d'améliorer les pratiques de sécurisation des applications.
 
 Le test d'intrusion avait pour objectif d’identifier les vulnérabilités potentielles de l’application et de fournir des recommandations en matière de sécurité. Ce test s'inscrit dans une démarche d'amélioration continue de la sécurité de l'infrastructure et des applications exposées à des utilisateurs externes.
@@ -76,19 +71,14 @@ Le test d'intrusion avait pour objectif d’identifier les vulnérabilités pote
 
 ### Portée du test :
 Le test a principalement couvert deux aspects :
-
 1. **L'infrastructure** : Évaluation de la configuration réseau, des services exposés, et des mécanismes de protection en place.
-
 2. **L’application web** : Analyse des points d’entrée de l'application, de la gestion des identités, des sessions, et des mécanismes de validation des entrées utilisateurs.
-
 
 ### Contraintes :
 - Le temps alloué pour cette prestation était limité, ce qui a restreint l’analyse exhaustive de tous les points d’entrée possibles.
 - Aucun accès aux codes sources de l'application ou aux serveurs hébergeant l'application n'a été fourni. Le test a été réalisé dans une approche « boîte noire », simulant l'attaque d'un utilisateur malveillant sans connaissances internes sur l'application.
 
-
 ## 1.3 Pilotage de la Prestation
-
 Le pilotage de cette mission a suivi une approche structurée afin d'assurer une exécution fluide et alignée sur les attentes du client. Le test d’intrusion a été réalisé en plusieurs phases, chacune encadrée par des points de contact réguliers avec le client pour garantir la transparence et la bonne progression du projet.
 
 ### Phases de la mission :
@@ -96,34 +86,26 @@ Le pilotage de cette mission a suivi une approche structurée afin d'assurer une
    - Recueil des besoins du client et définition du périmètre du test.
    - Planification des outils et méthodes à utiliser pour le test d'intrusion.
    - Configuration d’un environnement sécurisé pour l'exécution des tests.
-
 2. **Phase de tests** :
    - Réalisation des tests d’intrusion en suivant une approche **boîte noire**, simulant le comportement d’un attaquant sans accès aux informations internes.
-   - Utilisation d’outils automatisés et manuels pour identifier les vulnérabilités potentielles, notamment :
-     - Outils de scan de vulnérabilités (ex. **SQLMap**, **Nmap**).
-     - Analyse manuelle des points d’entrée utilisateur et des services exposés.
-
+   - Utilisation d’outils automatisés et manuels pour identifier les vulnérabilités potentielles.
 3. **Phase d’analyse** :
    - Analyse approfondie des résultats obtenus durant les tests pour en extraire les vulnérabilités les plus critiques.
    - Classement des vulnérabilités selon leur impact, leur facilité d’exploitation et leur sévérité.
-
 4. **Phase de restitution** :
    - Présentation des résultats sous forme de rapport détaillé, incluant les vulnérabilités détectées et les recommandations associées.
-   - Discussion avec le client pour clarifier certains points, notamment les priorités en matière de remédiation.
 
 ### Points de contact et communication :
-
 - Un compte-rendu final a été livré sous forme de rapport détaillé, avec une synthèse managériale et une synthèse technique.
 
-
-
 ## 1.4 Actions de nettoyage recommandées
-Suite à cet audit plusieurs action de néttoyage sont à prévoir.
-- C'est d'abord, la suppréssion des différents comptes utilisateurs et leur fichier respectifs  créé soit : pentest1 et pentest2.
-- C'est ensuite la suppréssion des difféntes demande Helpdesk comprenant les id : 29, 28, 27, 26, 25, 24, 23 et 22
-- Un nettoyage des commentaire sur la FAQ est aussi à prévoir
-- Une suppréssion des review sur l'article id=81
-- La suppression de toutes les commandes faites par les comptes pentest1 et pentest2
+Suite à cet audit plusieurs actions de nettoyage sont à prévoir :
+- Suppression des comptes utilisateurs créés (pentest1 et pentest2).
+- Suppression des demandes Helpdesk avec les ID suivants : 29, 28, 27, 26, 25, 24, 23 et 22.
+- Nettoyage des commentaires sur la FAQ.
+- Suppression des reviews sur l'article ID=81.
+- Suppression des commandes effectuées par les comptes pentest1 et pentest2.
+
 
 # 2. Synthèse Managériale
 
