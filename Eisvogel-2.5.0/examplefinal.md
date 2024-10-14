@@ -196,6 +196,135 @@ Les fichiers en questions sont :
 \end{tabular}
 \end{table}
 
+#### FuiteDInformation
+
+\begin{table}[htbp]
+\centering
+\renewcommand{\arraystretch}{1.5} % Augmente l'espacement entre les lignes
+\begin{tabular}{|>{\centering\arraybackslash}p{4cm}|>{\centering\arraybackslash}p{4cm}|>{\centering\arraybackslash}p{4cm}|>{\centering\arraybackslash}p{3cm}|}
+\hline
+\multicolumn{4}{|>{\columncolor{red}\centering\arraybackslash}p{16.30cm}|}{\textcolor{white}{\textbf{VULN-INFO-LEAK : Fuite d'information}}} \\ \hline
+\rowcolor{gray!30}
+\textbf{\textcolor{black}{État}} & \textbf{Impact} & \textbf{Difficulté d'exploitation} & \textbf{Sévérité} \\ \hline
+\textbf{Avérée} & \textbf{Élevé} & \textbf{Facile} & \textbf{3 / 4} \\
+\hline
+\end{tabular}
+\end{table}
+
+Une fuite d'information a été identifiée via la documentation API accessible publiquement à l'URL [https://hackazon.trackflaw.com/swagger](https://hackazon.trackflaw.com/swagger). Cette documentation expose des détails sensibles sur les schémas d'authentification et les points de terminaison de l'API, ce qui pourrait faciliter des attaques ciblées sur l'API.
+
+La requête :
+```
+GET /swagger HTTP/2
+Host: hackazon.trackflaw.com
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:131.0) Gecko/20100101 Firefox/131.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/png,image/svg+xml,*/*;q=0.8
+Accept-Language: fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3
+Accept-Encoding: gzip, deflate, br
+Upgrade-Insecure-Requests: 1
+Sec-Fetch-Dest: document
+Sec-Fetch-Mode: navigate
+Sec-Fetch-Site: none
+Sec-Fetch-User: ?1
+X-Pwnfox-Color: red
+Priority: u=0, i
+Te: trailers
+
+
+```
+
+---
+
+![Fuite d'information Swagger](images/fuiteinfo.png)
+
+La capture d'écran ci-dessus montre l'accès non sécurisé à la documentation Swagger exposant des informations critiques sur l'API Hackazon.
+
+---
+
+### **Remediation**
+
+\begin{table}[htbp]
+\centering
+\renewcommand{\arraystretch}{1.5} % Augmente l'espacement entre les lignes
+\begin{tabular}{|>{\centering\arraybackslash}p{5cm}|>{\centering\arraybackslash}p{5cm}|>{\centering\arraybackslash}p{5cm}|}
+\hline
+\multicolumn{3}{|>{\columncolor{cyan}\centering\arraybackslash}p{16.30cm}|}{\textcolor{white}{\textbf{VULN-INFO-LEAK : Recommandation pour sécuriser la documentation de l'API}}} \\ \hline
+\textbf{Complexité estimée : Faible} & \textbf{Travail/coût estimé : Faible} & \textbf{Priorité estimée : 3 / 4} \\
+\hline
+\multicolumn{3}{|p{16.30cm}|}{
+    Il est recommandé de protéger l'accès à la documentation Swagger en la rendant accessible uniquement à des utilisateurs authentifiés et autorisés :
+    1. **Restreindre l'accès à Swagger** : Utiliser des mécanismes d'authentification pour limiter l'accès à la documentation API uniquement aux développeurs autorisés.
+    2. **Supprimer les informations sensibles exposées** : Réviser les schémas et réponses exposés dans la documentation pour éviter toute exposition de données sensibles (comme les clés API, les schémas d'authentification, etc.).
+    3. **Désactiver Swagger en production** : Il est préférable de désactiver les outils de documentation comme Swagger dans les environnements de production pour éviter toute fuite d'information.
+} \\
+\hline
+\end{tabular}
+\end{table}
+
+
+#### ExpositionExcessiveDeDonnées
+
+\begin{table}[htbp]
+\centering
+\renewcommand{\arraystretch}{1.5} % Augmente l'espacement entre les lignes
+\begin{tabular}{|>{\centering\arraybackslash}p{4cm}|>{\centering\arraybackslash}p{4cm}|>{\centering\arraybackslash}p{4cm}|>{\centering\arraybackslash}p{3cm}|}
+\hline
+\multicolumn{4}{|>{\columncolor{red}\centering\arraybackslash}p{16.30cm}|}{\textcolor{white}{\textbf{VULN-DATA-EXPOSURE : Exposition excessive de données}}} \\ \hline
+\rowcolor{gray!30}
+\textbf{\textcolor{black}{État}} & \textbf{Impact} & \textbf{Difficulté d'exploitation} & \textbf{Sévérité} \\ \hline
+\textbf{Avérée} & \textbf{Critique} & \textbf{Facile} & \textbf{4 / 4} \\
+\hline
+\end{tabular}
+\end{table}
+
+Lors de l'analyse, il a été constaté que des informations sensibles telles que les mots de passe hachés et d'autres données personnelles sont exposées via une requête API. Par exemple, une simple recherche d'utilisateur dans la liste de souhaits permet de récupérer ces informations.
+
+La requête :
+
+```
+POST /wishlist/search HTTP/2
+Host: hackazon.trackflaw.com
+Cookie: visited_products=%2C64%2C72%2C1%2C81%2C; PHPSESSID=XXXXXXXXXXXXXXXXXXXXXXX
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:131.0) Gecko/20100101 Firefox/131.0
+Accept: application/json, text/javascript, */*; q=0.01
+Accept-Language: fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3
+Accept-Encoding: gzip, deflate, br
+Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+X-Requested-With: XMLHttpRequest
+Content-Length: 11
+Origin: https://hackazon.trackflaw.com
+Referer: https://hackazon.trackflaw.com/wishlist/
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+X-Pwnfox-Color: red
+Priority: u=0
+Te: trailers
+
+search=mail
+```
+---
+
+![Exposition excessive de données](images/screenexpo.png)
+
+---
+
+**Remediation**
+
+\begin{table}[htbp]
+\centering
+\renewcommand{\arraystretch}{1.5} % Augmente l'espacement entre les lignes
+\begin{tabular}{|>{\centering\arraybackslash}p{5cm}|>{\centering\arraybackslash}p{5cm}|>{\centering\arraybackslash}p{5cm}|}
+\hline
+\multicolumn{3}{|>{\columncolor{cyan}\centering\arraybackslash}p{16.30cm}|}{\textcolor{white}{\textbf{VULN-DATA-EXPOSURE : Recommandation pour corriger l'exposition excessive de données}}} \\ \hline
+\textbf{Complexité estimée : Moyenne} & \textbf{Travail/coût estimé : Moyen} & \textbf{Priorité estimée : 4 / 4} \\
+\hline
+\multicolumn{3}{|p{16.30cm}|}{
+    Il est recommandé de limiter les informations exposées par l'API. Seules les données strictement nécessaires à l'exécution de la fonctionnalité demandée doivent être retournées, en excluant les informations sensibles comme les mots de passe hachés, les jetons de session, etc.
+} \\
+\hline
+\end{tabular}
+\end{table}
 
 
 
@@ -715,6 +844,77 @@ La capture d'écran ci-dessus montre que l'interface utilisateur ne présente au
     1. **Option accessible dans le profil utilisateur** : Un lien ou bouton permettant aux utilisateurs de modifier leur mot de passe depuis leur espace personnel.
     2. **Demande du mot de passe actuel** : Avant tout changement de mot de passe, l'application doit demander le mot de passe actuel pour prévenir tout abus.
     3. **Protection CSRF** : Implémenter un jeton CSRF pour prévenir les attaques de type "Cross-Site Request Forgery" (CSRF) et éviter les futures vulnérabilités liées aux requêtes frauduleuses.
+} \\
+\hline
+\end{tabular}
+\end{table}
+
+
+#### FaiblePolitiqueDeMotDePasse
+
+\begin{table}[htbp]
+\centering
+\renewcommand{\arraystretch}{1.5} % Augmente l'espacement entre les lignes
+\begin{tabular}{|>{\centering\arraybackslash}p{4cm}|>{\centering\arraybackslash}p{4cm}|>{\centering\arraybackslash}p{4cm}|>{\centering\arraybackslash}p{3cm}|}
+\hline
+\multicolumn{4}{|>{\columncolor{red}\centering\arraybackslash}p{16.30cm}|}{\textcolor{white}{\textbf{VULN-PASSWORD-POLICY : Faible politique de mot de passe}}} \\ \hline
+\rowcolor{gray!30}
+\textbf{\textcolor{black}{État}} & \textbf{Impact} & \textbf{Difficulté d'exploitation} & \textbf{Sévérité} \\ \hline
+\textbf{Avérée} & \textbf{Moyen} & \textbf{Facile} & \textbf{2 / 4} \\
+\hline
+\end{tabular}
+\end{table}
+
+L'audit a révélé une faible politique de mot de passe dans l'application. Il est possible d'enregistrer des mots de passe très simples sans aucune complexité, ce qui peut exposer les comptes à des attaques par force brute ou par devinette.
+
+La requête :
+
+```
+POST /user/register HTTP/2
+Host: hackazon.trackflaw.com
+Cookie: PHPSESSID=XXXXXXXXXXXXXXXXXXXXX
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:131.0) Gecko/20100101 Firefox/131.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/png,image/svg+xml,*/*;q=0.8
+Accept-Language: fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3
+Accept-Encoding: gzip, deflate, br
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 100
+Origin: https://hackazon.trackflaw.com
+Referer: https://hackazon.trackflaw.com/user/register
+Upgrade-Insecure-Requests: 1
+Sec-Fetch-Dest: document
+Sec-Fetch-Mode: navigate
+Sec-Fetch-Site: same-origin
+Sec-Fetch-User: ?1
+X-Pwnfox-Color: red
+Priority: u=0, i
+Te: trailers
+
+first_name=toto&last_name=tata&username=toto&email=toto%40tata.fr&password=1&password_confirmation=1
+```
+---
+
+![Faible politique de mot de passe](images/FaiblePolitiqueMotDePasse.png)
+
+La capture d'écran ci-dessus montre la possibilité de créer un compte avec un mot de passe simple sans restriction de complexité.
+
+---
+
+**Remediation**
+
+\begin{table}[htbp]
+\centering
+\renewcommand{\arraystretch}{1.5} % Augmente l'espacement entre les lignes
+\begin{tabular}{|>{\centering\arraybackslash}p{5cm}|>{\centering\arraybackslash}p{5cm}|>{\centering\arraybackslash}p{5cm}|}
+\hline
+\multicolumn{3}{|>{\columncolor{cyan}\centering\arraybackslash}p{16.30cm}|}{\textcolor{white}{\textbf{VULN-PASSWORD-POLICY : Recommandation pour renforcer la politique de mot de passe}}} \\ \hline
+\textbf{Complexité estimée : Faible} & \textbf{Travail/coût estimé : Faible} & \textbf{Priorité estimée : 2 / 4} \\
+\hline
+\multicolumn{3}{|p{16.30cm}|}{
+    Il est recommandé de renforcer la politique de mot de passe en imposant les bonnes pratiques suivantes :
+    1. **Complexité minimale** : Exiger au moins 8 caractères avec un mélange de majuscules, minuscules, chiffres et caractères spéciaux.
+    2. **Expiration des mots de passe** : Mettre en place une expiration périodique des mots de passe et demander une mise à jour après un certain temps.
+    3. **Vérification de mot de passe fort** : Utiliser un indicateur de force de mot de passe pour encourager les utilisateurs à créer des mots de passe robustes.
 } \\
 \hline
 \end{tabular}
@@ -1521,6 +1721,121 @@ En téléversant ce fichier PHP malveillant, un attaquant pourrait ensuite navig
 \end{tabular}
 \end{table}
 
+<<<<<<< HEAD
+
+#### Gestion des erreurs
+
+> FIXME: Review of how the application handles errors (e.g., verbose error messages).
+
+#### Cryptographie
+
+##### Mauvaise configuration SSL
+
+\begin{table}[htbp]
+\centering
+\renewcommand{\arraystretch}{1.5} % Augmente l'espacement entre les lignes
+\begin{tabular}{|>{\centering\arraybackslash}p{4cm}|>{\centering\arraybackslash}p{4cm}|>{\centering\arraybackslash}p{4cm}|>{\centering\arraybackslash}p{3cm}|}
+\hline
+\multicolumn{4}{|>{\columncolor{red}\centering\arraybackslash}p{16.30cm}|}{\textcolor{white}{\textbf{VULN-SSL : Mauvaise configuration SSL}}} \\ \hline
+\rowcolor{gray!30}
+\textbf{\textcolor{black}{État}} & \textbf{Impact} & \textbf{Difficulté d'exploitation} & \textbf{Sévérité} \\ \hline
+\textbf{Avérée} & \textbf{Moyen} & \textbf{Modéré} & \textbf{2 / 4} \\
+\hline
+\end{tabular}
+\end{table}
+
+Lors de l'audit, des problèmes de configuration SSL ont été identifiés, affectant la sécurité des communications entre les utilisateurs et le serveur, augmentant ainsi le risque d'attaques de type "Man-in-the-Middle" (MITM). L'absence de HSTS et l'utilisation de suites de chiffrement faibles sont deux points critiques qui compromettent la sécurité des connexions.
+
+---
+
+![Manque HSTS](images/hsts.png)
+
+![Suites de chiffrement faibles](images/cipher.png)
+
+Les captures d'écran ci-dessus montrent les résultats d'un scan SSL, révélant l'absence de HSTS et la prise en charge de suites de chiffrement obsolètes.
+
+---
+
+**Remediation**
+
+\begin{table}[htbp]
+\centering
+\renewcommand{\arraystretch}{1.5} % Augmente l'espacement entre les lignes
+\begin{tabular}{|>{\centering\arraybackslash}p{5cm}|>{\centering\arraybackslash}p{5cm}|>{\centering\arraybackslash}p{5cm}|}
+\hline
+\multicolumn{3}{|>{\columncolor{cyan}\centering\arraybackslash}p{16.30cm}|}{\textcolor{white}{\textbf{VULN-SSL : Recommandation pour sécuriser la configuration SSL}}} \\ \hline
+\textbf{Complexité estimée : Faible} & \textbf{Travail/coût estimé : Faible} & \textbf{Priorité estimée : 2 / 4} \\
+\hline
+\multicolumn{3}{|p{16.30cm}|}{
+    Il est recommandé de renforcer la configuration SSL en appliquant les actions suivantes :
+    1. Activer HSTS : Permet de forcer les navigateurs à utiliser des connexions HTTPS uniquement, même si une tentative est faite en HTTP. Cela protège contre les attaques de redirection et de downgrade.
+    2. Désactiver les suites de chiffrement faibles : Les protocoles et ciphers obsolètes (par exemple, TLS 1.0, TLS 1.1, et des ciphers RC4) doivent être désactivés pour empêcher les attaques exploitant ces algorithmes faibles.
+    3. Configurer une liste de ciphers robustes et modernes : Utiliser uniquement des ciphers modernes et recommandés tels que AES-GCM avec TLS 1.2 ou supérieur.
+} \\
+\hline
+\end{tabular}
+\end{table}
+
+##### FaibleRègleDeStockageDesMotsDePasse
+
+\begin{table}[htbp]
+\centering
+\renewcommand{\arraystretch}{1.5} % Augmente l'espacement entre les lignes
+\begin{tabular}{|>{\centering\arraybackslash}p{4cm}|>{\centering\arraybackslash}p{4cm}|>{\centering\arraybackslash}p{4cm}|>{\centering\arraybackslash}p{3cm}|}
+\hline
+\multicolumn{4}{|>{\columncolor{red}\centering\arraybackslash}p{16.30cm}|}{\textcolor{white}{\textbf{VULN-WEAK-PASSWORD-STORAGE : Faible règle de stockage des mots de passe}}} \\ \hline
+\rowcolor{gray!30}
+\textbf{\textcolor{black}{État}} & \textbf{Impact} & \textbf{Difficulté d'exploitation} & \textbf{Sévérité} \\ \hline
+\textbf{Avérée} & \textbf{Élevé} & \textbf{Facile} & \textbf{4 / 4} \\
+\hline
+\end{tabular}
+\end{table}
+
+L'audit a révélé une mauvaise pratique de stockage des mots de passe. Les mots de passe sont hachés en utilisant l'algorithme **MD5**, qui est considéré comme obsolète et non sécurisé. De plus, le stockage des mots de passe sans salage approprié rend l'application vulnérable aux attaques par tables arc-en-ciel.
+
+---
+
+![Mauvaise utilisation de MD5](images/md5_2.png)
+
+![Mauvaise utilisation de MD5](images/md5.png)
+
+![Absence de salage](images/salt.png)
+
+Les captures d'écran ci-dessus montrent l'utilisation de MD5 sans salage lors du hachage des mots de passe, ce qui réduit considérablement la sécurité du stockage des informations d'authentification.
+
+---
+
+**Remediation**
+
+\begin{table}[htbp]
+\centering
+\renewcommand{\arraystretch}{1.5} % Augmente l'espacement entre les lignes
+\begin{tabular}{|>{\centering\arraybackslash}p{5cm}|>{\centering\arraybackslash}p{5cm}|>{\centering\arraybackslash}p{5cm}|}
+\hline
+\multicolumn{3}{|>{\columncolor{cyan}\centering\arraybackslash}p{16.30cm}|}{\textcolor{white}{\textbf{VULN-WEAK-PASSWORD-STORAGE : Recommandation pour renforcer le stockage des mots de passe}}} \\ \hline
+\textbf{Complexité estimée : Moyenne} & \textbf{Travail/coût estimé : Modéré} & \textbf{Priorité estimée : 4 / 4} \\
+\hline
+\multicolumn{3}{|p{16.30cm}|}{
+    Il est recommandé d'utiliser des algorithmes de hachage modernes tels que **bcrypt** ou **Argon2** avec un salage fort pour stocker les mots de passe. Ces algorithmes sont conçus pour résister aux attaques par force brute et offrent des options de salage automatique.
+    1. **Remplacer MD5** par **bcrypt** ou **Argon2** pour garantir une meilleure sécurité.
+    2. **Ajouter un salage unique** à chaque mot de passe avant de le hacher afin d'éviter les attaques par tables arc-en-ciel.
+    3. **Renouveler les mots de passe** : Inviter les utilisateurs à mettre à jour leurs mots de passe afin de s'assurer qu'ils sont stockés avec les nouvelles pratiques de sécurité.
+} \\
+\hline
+\end{tabular}
+\end{table}
+
+
+#### Processus métier
+
+> FIXME: Assessment of business logic flaws.
+
+#### Côté client
+
+> FIXME: Client-side vulnerabilities (e.g., JavaScript security, DOM-based XSS).
+
+=======
+>>>>>>> faa3954b26af11187196e0e8fa1a99ca5a053aed
 # 5. Annexe
 
 ## 5.1 Présentation de la démarche
